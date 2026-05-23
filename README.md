@@ -14,7 +14,7 @@ Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthr
 
 Free Claude Code routes Anthropic Messages API traffic from Claude Code to any provider. It keeps Claude Code's client-side protocol stable while letting you choose free, paid, or local models.
 
-[Quick Start](#quick-start) · [Providers](#choose-a-provider) · [Clients](#connect-claude-code) · [Integrations](#optional-integrations) · [Development](#development)
+[Quick Start](#quick-start) · [Local Setup](#local-setup) · [Providers](#choose-a-provider) · [Clients](#connect-claude-code) · [Integrations](#optional-integrations) · [Development](#development)
 
 </div>
 
@@ -101,6 +101,98 @@ fcc-claude
 ```
 
 `fcc-claude` reads the current configured port and auth token each time it starts, sets the Claude Code environment variables (including a 190k-token `CLAUDE_CODE_AUTO_COMPACT_WINDOW` for auto-compaction), and then launches the real `claude` command.
+
+## Local Setup
+
+Use this path when you clone the repository and want to run the proxy on your machine without the global `install.sh` / `install.ps1` flow. Configuration still goes through the **Admin UI** at `/admin` (same as [Quick Start](#quick-start)).
+
+### 1. Prerequisites
+
+| Tool | Install |
+| --- | --- |
+| **uv** (≥ 0.11) | `curl -LsSf https://astral.sh/uv/install.sh \| sh` then `uv self update` |
+| **Python 3.14.0** | `uv python install 3.14.0` |
+| **Claude Code CLI** (for `fcc-claude`) | `npm install -g @anthropic-ai/claude-code` |
+
+### 2. Install Dependencies
+
+```bash
+git clone https://github.com/Alishahryar1/free-claude-code.git
+cd free-claude-code
+uv sync
+```
+
+For development checks and tests, include the dev group:
+
+```bash
+uv sync --group dev
+```
+
+Optional voice extras (only if you use [Voice Notes](#2-voice-notes)):
+
+```bash
+uv sync --extra voice          # NVIDIA NIM transcription
+uv sync --extra voice_local    # local Whisper
+```
+
+### 3. Start The Proxy
+
+**Recommended** — same behavior as the installed `fcc-server` (Admin UI restart, health check, optional browser open):
+
+```bash
+uv run fcc-server
+```
+
+On first run, legacy env files under `~/free-claude-code/.env` or `~/.config/free-claude-code/.env` are migrated to `~/.fcc/.env` when that path does not exist yet. You can also scaffold defaults once with:
+
+```bash
+uv run fcc-init
+```
+
+Then edit keys in the **Admin UI** rather than hand-editing `~/.fcc/.env` for day-to-day changes.
+
+**Alternative** — minimal Uvicorn bind (no supervised restart or auto browser):
+
+```bash
+uv run uvicorn server:app --host 0.0.0.0 --port 8082 --timeout-graceful-shutdown 5
+```
+
+Or:
+
+```bash
+uv run python server.py
+```
+
+After startup, open the Admin URL from the log line (default `http://127.0.0.1:8082/admin`). Set `PORT` and `ANTHROPIC_AUTH_TOKEN` in the Admin UI if you change the defaults from [`.env.example`](.env.example).
+
+### 4. Configure A Provider
+
+1. Open **Admin UI** → **Providers**.
+2. Paste the API key or local base URL for your backend (see [Choose A Provider](#choose-a-provider)).
+3. Set `MODEL` (and optional `MODEL_OPUS` / `MODEL_SONNET` / `MODEL_HAIKU`).
+4. Click **Validate**, then **Apply**.
+
+For **local models only** (no cloud API key), start Ollama, LM Studio, or `llama-server` first, then point `MODEL` at slugs such as `ollama/llama3.1` or `lmstudio/<model-id>`.
+
+### 5. Run Claude Code
+
+In a **second terminal**, with the proxy still running:
+
+```bash
+uv run fcc-claude
+```
+
+`fcc-claude` targets the proxy URL and auth token from your current Admin UI-managed settings.
+
+VS Code and JetBrains: use the same `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN` as in [Connect Claude Code](#connect-claude-code), matching your configured `PORT` and token.
+
+### 6. Local vs Global Install
+
+| | **Local Setup** (this section) | **Quick Start** (`install.sh`) |
+| --- | --- | --- |
+| Install | `uv sync` in a clone | `uv tool install` from GitHub |
+| Commands | `uv run fcc-server`, `uv run fcc-claude` | `fcc-server`, `fcc-claude` on PATH |
+| Best for | Hacking on the repo, PRs, custom branches | Daily use without a checkout |
 
 ## Choose A Provider
 
@@ -433,13 +525,7 @@ free-claude-code/
 
 ### 2. Run From Source
 
-Use this path if you are developing or want to run directly from a checkout:
-
-```bash
-git clone https://github.com/Alishahryar1/free-claude-code.git
-cd free-claude-code
-uv run uvicorn server:app --host 0.0.0.0 --port 8082
-```
+See [Local Setup](#local-setup) for clone, `uv sync`, `uv run fcc-server`, and `uv run fcc-claude`. Use `uv run uvicorn server:app --host 0.0.0.0 --port 8082` only when you need a bare Uvicorn process without the `fcc-server` supervisor.
 
 ### 3. Commands
 
