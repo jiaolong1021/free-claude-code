@@ -7,7 +7,7 @@ Use Claude Code CLI, VS Code, JetBrains ACP, or chat bots through your own Anthr
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Python 3.14](https://img.shields.io/badge/python-3.14-3776ab.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![uv](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json&style=for-the-badge)](https://github.com/astral-sh/uv)
-[![Tested with Pytest](https://img.shields.io/badge/testing-Pytest-00c0ff.svg?style=for-the-badge)](https://github.com/Alishahryar1/free-claude-code/actions/workflows/tests.yml)
+[![Tested with Pytest](https://img.shields.io/badge/testing-Pytest-00c0ff.svg?style=for-the-badge)](https://github.com/jiaolong1021/free-claude-code/actions/workflows/tests.yml)
 [![Type checking: Ty](https://img.shields.io/badge/type%20checking-ty-ffcc00.svg?style=for-the-badge)](https://pypi.org/project/ty/)
 [![Code style: Ruff](https://img.shields.io/badge/code%20formatting-ruff-f5a623.svg?style=for-the-badge)](https://github.com/astral-sh/ruff)
 [![Logging: Loguru](https://img.shields.io/badge/logging-loguru-4ecdc4.svg?style=for-the-badge)](https://github.com/Delgan/loguru)
@@ -25,11 +25,11 @@ Free Claude Code routes Anthropic Messages API traffic from Claude Code to any p
 ## Star History
 
 <div align="center">
-  <a href="https://star-history.com/#Alishahryar1/free-claude-code&Date">
+  <a href="https://star-history.com/#jiaolong1021/free-claude-code&Date">
     <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date&theme=dark">
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date">
-      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Alishahryar1/free-claude-code&type=Date" width="700">
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=jiaolong1021/free-claude-code&type=Date&theme=dark">
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=jiaolong1021/free-claude-code&type=Date">
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=jiaolong1021/free-claude-code&type=Date" width="700">
     </picture>
   </a>
 </div>
@@ -55,16 +55,16 @@ Install or update Claude Code, uv, Python 3.14.0, and Free Claude Code:
 macOS/Linux:
 
 ```bash
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh
+curl -fsSL "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh
 ```
 
 Windows PowerShell:
 
 ```powershell
-irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1" | iex
+irm "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1?raw=1" | iex
 ```
 
-Review the installers at [scripts/install.sh](https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh) and [scripts/install.ps1](https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1).
+Review the installers at [scripts/install.sh](https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh) and [scripts/install.ps1](https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1).
 
 ### 2. Start The Proxy
 
@@ -117,7 +117,7 @@ Use this path when you clone the repository and want to run the proxy on your ma
 ### 2. Install Dependencies
 
 ```bash
-git clone https://github.com/Alishahryar1/free-claude-code.git
+git clone https://github.com/jiaolong1021/free-claude-code.git
 cd free-claude-code
 uv sync
 ```
@@ -458,32 +458,32 @@ macOS/Linux:
 
 ```bash
 # NVIDIA NIM transcription (Riva gRPC)
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-nim
+curl -fsSL "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-nim
 
 # Local Whisper (CPU or CUDA)
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local
+curl -fsSL "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local
 
 # Both backends
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-all
+curl -fsSL "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-all
 
 # Local Whisper with CUDA
-curl -fsSL "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local --torch-backend cu130
+curl -fsSL "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.sh?raw=1" | sh -s -- --voice-local --torch-backend cu130
 ```
 
 Windows PowerShell:
 
 ```powershell
 # NVIDIA NIM transcription (Riva gRPC)
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceNim
+& ([scriptblock]::Create((irm "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceNim
 
 # Local Whisper (CPU or CUDA)
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal
+& ([scriptblock]::Create((irm "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal
 
 # Both backends
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceAll
+& ([scriptblock]::Create((irm "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceAll
 
 # Local Whisper with CUDA
-& ([scriptblock]::Create((irm "https://github.com/Alishahryar1/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal -TorchBackend cu130
+& ([scriptblock]::Create((irm "https://github.com/jiaolong1021/free-claude-code/blob/main/scripts/install.ps1?raw=1"))) -VoiceLocal -TorchBackend cu130
 ```
 
 Restart `fcc-server` after reinstalling.
@@ -557,7 +557,7 @@ Run them in that order before pushing. CI enforces the same checks.
 ## Contributing
 
 - [`.env.example`](.env.example) lists env key names as a read-only reference for contributors; use the **Admin UI** to change managed proxy settings.
-- Report bugs and feature requests in [Issues](https://github.com/Alishahryar1/free-claude-code/issues).
+- Report bugs and feature requests in [Issues](https://github.com/jiaolong1021/free-claude-code/issues).
 - Keep changes small and covered by focused tests.
 - Do not open Docker integration PRs.
 - Do not open README change PRs just open an issue for it.
