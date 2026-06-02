@@ -252,6 +252,127 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         ),
     ),
     ConfigFieldSpec(
+        "BAILIAN_CODING_PLAN_API_KEY",
+        "Bailian Coding Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="bailian_coding_plan_api_key",
+        secret=True,
+        description=(
+            "Alibaba Bailian Coding Plan key (sk-sp-*). Use the Anthropic Messages "
+            "endpoint, not the pay-as-you-go DashScope key."
+        ),
+    ),
+    ConfigFieldSpec(
+        "BAILIAN_TOKEN_PLAN_API_KEY",
+        "Bailian Token Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="bailian_token_plan_api_key",
+        secret=True,
+        description="Alibaba Bailian Token Plan team edition API key.",
+    ),
+    ConfigFieldSpec(
+        "BAILIAN_CODING_PLAN_BASE_URL",
+        "Bailian Coding Plan Base URL",
+        "providers",
+        settings_attr="bailian_coding_plan_base_url",
+        default="https://coding.dashscope.aliyuncs.com/apps/anthropic/v1",
+        description=(
+            "Anthropic-compatible Coding Plan endpoint. Leave blank for China; set "
+            "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1 for "
+            "international plans."
+        ),
+    ),
+    ConfigFieldSpec(
+        "BAILIAN_TOKEN_PLAN_BASE_URL",
+        "Bailian Token Plan Base URL",
+        "providers",
+        settings_attr="bailian_token_plan_base_url",
+        default="https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "VOLCENGINE_CODING_PLAN_API_KEY",
+        "Volcengine Coding Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="volcengine_coding_plan_api_key",
+        secret=True,
+        description=(
+            "Volcengine Ark Coding Plan key. Use ark.cn-beijing.volces.com/api/coding, "
+            "not the pay-as-you-go API URL."
+        ),
+    ),
+    ConfigFieldSpec(
+        "VOLCENGINE_CODING_PLAN_BASE_URL",
+        "Volcengine Coding Plan Base URL",
+        "providers",
+        settings_attr="volcengine_coding_plan_base_url",
+        default="https://ark.cn-beijing.volces.com/api/coding/v1",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "ZHIPU_CODING_PLAN_API_KEY",
+        "Zhipu Coding Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="zhipu_coding_plan_api_key",
+        secret=True,
+        description=(
+            "Zhipu GLM Coding Plan key from open.bigmodel.cn. Use the Anthropic "
+            "Coding Plan endpoint, not the pay-as-you-go paas/v4 URL."
+        ),
+    ),
+    ConfigFieldSpec(
+        "ZHIPU_CODING_PLAN_BASE_URL",
+        "Zhipu Coding Plan Base URL",
+        "providers",
+        settings_attr="zhipu_coding_plan_base_url",
+        default="https://open.bigmodel.cn/api/anthropic/v1",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "KIMI_CODING_PLAN_API_KEY",
+        "Kimi Coding Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="kimi_coding_plan_api_key",
+        secret=True,
+        description=(
+            "Kimi Code subscription key from kimi.com/code. Separate from the "
+            "Moonshot pay-as-you-go KIMI_API_KEY."
+        ),
+    ),
+    ConfigFieldSpec(
+        "KIMI_CODING_PLAN_BASE_URL",
+        "Kimi Coding Plan Base URL",
+        "providers",
+        settings_attr="kimi_coding_plan_base_url",
+        default="https://api.kimi.com/coding/v1",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "MINIMAX_TOKEN_PLAN_API_KEY",
+        "MiniMax Token Plan API Key",
+        "providers",
+        "secret",
+        settings_attr="minimax_token_plan_api_key",
+        secret=True,
+        description=(
+            "MiniMax Token Plan subscription key (not interchangeable with "
+            "pay-as-you-go Open Platform API keys)."
+        ),
+    ),
+    ConfigFieldSpec(
+        "MINIMAX_TOKEN_PLAN_BASE_URL",
+        "MiniMax Token Plan Base URL",
+        "providers",
+        settings_attr="minimax_token_plan_base_url",
+        default="https://api.minimax.io/anthropic/v1",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
         "LM_STUDIO_BASE_URL",
         "LM Studio Base URL",
         "providers",
@@ -404,6 +525,60 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "secret",
         settings_attr="cerebras_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "BAILIAN_CODING_PLAN_PROXY",
+        "Bailian Coding Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="bailian_coding_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "BAILIAN_TOKEN_PLAN_PROXY",
+        "Bailian Token Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="bailian_token_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "VOLCENGINE_CODING_PLAN_PROXY",
+        "Volcengine Coding Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="volcengine_coding_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "ZHIPU_CODING_PLAN_PROXY",
+        "Zhipu Coding Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="zhipu_coding_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "KIMI_CODING_PLAN_PROXY",
+        "Kimi Coding Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="kimi_coding_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "MINIMAX_TOKEN_PLAN_PROXY",
+        "MiniMax Token Plan Proxy",
+        "providers",
+        "secret",
+        settings_attr="minimax_token_plan_proxy",
         secret=True,
         advanced=True,
     ),

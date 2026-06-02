@@ -144,6 +144,50 @@ class Settings(BaseSettings):
     # ==================== Cerebras Inference (OpenAI-compatible) ====================
     cerebras_api_key: str = Field(default="", validation_alias="CEREBRAS_API_KEY")
 
+    # ==================== Alibaba Bailian / CN subscription plans ====================
+    bailian_coding_plan_api_key: str = Field(
+        default="", validation_alias="BAILIAN_CODING_PLAN_API_KEY"
+    )
+    bailian_token_plan_api_key: str = Field(
+        default="", validation_alias="BAILIAN_TOKEN_PLAN_API_KEY"
+    )
+    bailian_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="BAILIAN_CODING_PLAN_BASE_URL",
+    )
+    bailian_token_plan_base_url: str = Field(
+        default="",
+        validation_alias="BAILIAN_TOKEN_PLAN_BASE_URL",
+    )
+    volcengine_coding_plan_api_key: str = Field(
+        default="", validation_alias="VOLCENGINE_CODING_PLAN_API_KEY"
+    )
+    volcengine_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="VOLCENGINE_CODING_PLAN_BASE_URL",
+    )
+    zhipu_coding_plan_api_key: str = Field(
+        default="", validation_alias="ZHIPU_CODING_PLAN_API_KEY"
+    )
+    zhipu_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="ZHIPU_CODING_PLAN_BASE_URL",
+    )
+    kimi_coding_plan_api_key: str = Field(
+        default="", validation_alias="KIMI_CODING_PLAN_API_KEY"
+    )
+    kimi_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="KIMI_CODING_PLAN_BASE_URL",
+    )
+    minimax_token_plan_api_key: str = Field(
+        default="", validation_alias="MINIMAX_TOKEN_PLAN_API_KEY"
+    )
+    minimax_token_plan_base_url: str = Field(
+        default="",
+        validation_alias="MINIMAX_TOKEN_PLAN_BASE_URL",
+    )
+
     # ==================== Messaging Platform Selection ====================
     # Valid: "telegram" | "discord" | "none"
     messaging_platform: str = Field(
@@ -204,6 +248,24 @@ class Settings(BaseSettings):
     gemini_proxy: str = Field(default="", validation_alias="GEMINI_PROXY")
     groq_proxy: str = Field(default="", validation_alias="GROQ_PROXY")
     cerebras_proxy: str = Field(default="", validation_alias="CEREBRAS_PROXY")
+    bailian_coding_plan_proxy: str = Field(
+        default="", validation_alias="BAILIAN_CODING_PLAN_PROXY"
+    )
+    bailian_token_plan_proxy: str = Field(
+        default="", validation_alias="BAILIAN_TOKEN_PLAN_PROXY"
+    )
+    volcengine_coding_plan_proxy: str = Field(
+        default="", validation_alias="VOLCENGINE_CODING_PLAN_PROXY"
+    )
+    zhipu_coding_plan_proxy: str = Field(
+        default="", validation_alias="ZHIPU_CODING_PLAN_PROXY"
+    )
+    kimi_coding_plan_proxy: str = Field(
+        default="", validation_alias="KIMI_CODING_PLAN_PROXY"
+    )
+    minimax_token_plan_proxy: str = Field(
+        default="", validation_alias="MINIMAX_TOKEN_PLAN_PROXY"
+    )
 
     # ==================== Provider Rate Limiting ====================
     provider_rate_limit: int = Field(default=40, validation_alias="PROVIDER_RATE_LIMIT")

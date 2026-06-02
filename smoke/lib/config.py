@@ -57,6 +57,12 @@ PROVIDER_SMOKE_DEFAULT_MODELS: dict[str, str] = {
     "gemini": "gemini/models/gemini-3.1-flash-lite",
     "groq": "groq/llama-3.3-70b-versatile",
     "cerebras": "cerebras/llama3.1-8b",
+    "bailian_coding_plan": "bailian_coding_plan/qwen3-coder-plus",
+    "bailian_token_plan": "bailian_token_plan/qwen3-coder-plus",
+    "volcengine_coding_plan": "volcengine_coding_plan/ark-code-latest",
+    "zhipu_coding_plan": "zhipu_coding_plan/glm-4.7",
+    "kimi_coding_plan": "kimi_coding_plan/kimi-for-coding",
+    "minimax_token_plan": "minimax_token_plan/MiniMax-M2.5",
 }
 
 NVIDIA_NIM_CLI_DEFAULT_MODELS: tuple[str, ...] = (
@@ -225,41 +231,18 @@ class SmokeConfig:
         return bool(os.getenv(f"FCC_SMOKE_MODEL_{provider.upper()}"))
 
     def has_provider_configuration(self, provider: str) -> bool:
-        if provider == "nvidia_nim":
-            return bool(self.settings.nvidia_nim_api_key.strip())
-        if provider == "open_router":
-            return bool(self.settings.open_router_api_key.strip())
-        if provider == "mistral":
-            return bool(self.settings.mistral_api_key.strip())
-        if provider == "mistral_codestral":
-            return bool(self.settings.codestral_api_key.strip())
-        if provider == "deepseek":
-            return bool(self.settings.deepseek_api_key.strip())
-        if provider == "kimi":
-            return bool(self.settings.kimi_api_key.strip())
-        if provider == "lmstudio":
-            return bool(self.settings.lm_studio_base_url.strip())
-        if provider == "llamacpp":
-            return bool(self.settings.llamacpp_base_url.strip())
-        if provider == "ollama":
-            return bool(self.settings.ollama_base_url.strip())
-        if provider == "wafer":
-            return bool(self.settings.wafer_api_key.strip())
-        if provider == "fireworks":
-            return bool(self.settings.fireworks_api_key.strip())
-        if provider == "opencode":
-            return bool(self.settings.opencode_api_key.strip())
-        if provider == "opencode_go":
-            return bool(self.settings.opencode_api_key.strip())
-        if provider == "zai":
-            return bool(self.settings.zai_api_key.strip())
-        if provider == "gemini":
-            return bool(self.settings.gemini_api_key.strip())
-        if provider == "groq":
-            return bool(self.settings.groq_api_key.strip())
-        if provider == "cerebras":
-            return bool(self.settings.cerebras_api_key.strip())
-        return False
+        descriptor = PROVIDER_CATALOG.get(provider)
+        if descriptor is None:
+            return False
+        if descriptor.static_credential is not None:
+            if descriptor.base_url_attr is None:
+                return True
+            base_url = getattr(self.settings, descriptor.base_url_attr, "")
+            return bool(str(base_url).strip())
+        if descriptor.credential_attr is None:
+            return False
+        credential = getattr(self.settings, descriptor.credential_attr, "")
+        return bool(str(credential).strip())
 
 
 def _parse_csv(raw: str | None) -> frozenset[str]:

@@ -22,6 +22,12 @@ _EXPECTED_PROVIDER_ORDER: tuple[str, ...] = (
     "lmstudio",
     "llamacpp",
     "ollama",
+    "bailian_coding_plan",
+    "bailian_token_plan",
+    "volcengine_coding_plan",
+    "zhipu_coding_plan",
+    "kimi_coding_plan",
+    "minimax_token_plan",
 )
 
 

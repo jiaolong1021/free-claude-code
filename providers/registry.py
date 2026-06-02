@@ -136,6 +136,54 @@ def _create_cerebras(config: ProviderConfig, _settings: Settings) -> BaseProvide
     return CerebrasProvider(config)
 
 
+def _create_bailian_coding_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.bailian import BailianCodingPlanProvider
+
+    return BailianCodingPlanProvider(config)
+
+
+def _create_bailian_token_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.bailian import BailianTokenPlanProvider
+
+    return BailianTokenPlanProvider(config)
+
+
+def _create_volcengine_coding_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.volcengine import VolcengineCodingPlanProvider
+
+    return VolcengineCodingPlanProvider(config)
+
+
+def _create_zhipu_coding_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.zhipu import ZhipuCodingPlanProvider
+
+    return ZhipuCodingPlanProvider(config)
+
+
+def _create_kimi_coding_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.kimi import KimiCodingPlanProvider
+
+    return KimiCodingPlanProvider(config)
+
+
+def _create_minimax_token_plan(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.minimax import MinimaxTokenPlanProvider
+
+    return MinimaxTokenPlanProvider(config)
+
+
 PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "nvidia_nim": _create_nvidia_nim,
     "open_router": _create_open_router,
@@ -154,6 +202,12 @@ PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "lmstudio": _create_lmstudio,
     "llamacpp": _create_llamacpp,
     "ollama": _create_ollama,
+    "bailian_coding_plan": _create_bailian_coding_plan,
+    "bailian_token_plan": _create_bailian_token_plan,
+    "volcengine_coding_plan": _create_volcengine_coding_plan,
+    "zhipu_coding_plan": _create_zhipu_coding_plan,
+    "kimi_coding_plan": _create_kimi_coding_plan,
+    "minimax_token_plan": _create_minimax_token_plan,
 }
 
 if set(PROVIDER_DESCRIPTORS) != set(SUPPORTED_PROVIDER_IDS) or set(

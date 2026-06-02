@@ -5,8 +5,18 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from config.nim import NimSettings
-from config.provider_catalog import PROVIDER_CATALOG, ZAI_DEFAULT_BASE
+from config.provider_catalog import (
+    BAILIAN_CODING_PLAN_DEFAULT_BASE,
+    BAILIAN_TOKEN_PLAN_DEFAULT_BASE,
+    KIMI_CODING_PLAN_DEFAULT_BASE,
+    MINIMAX_TOKEN_PLAN_DEFAULT_BASE,
+    PROVIDER_CATALOG,
+    VOLCENGINE_CODING_PLAN_DEFAULT_BASE,
+    ZAI_DEFAULT_BASE,
+    ZHIPU_CODING_PLAN_DEFAULT_BASE,
+)
 from config.provider_ids import SUPPORTED_PROVIDER_IDS
+from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
 from providers.cerebras import CerebrasProvider
 from providers.codestral import CodestralProvider
 from providers.deepseek import DeepSeekProvider
@@ -14,9 +24,10 @@ from providers.exceptions import UnknownProviderTypeError
 from providers.fireworks import FireworksProvider
 from providers.gemini import GeminiProvider
 from providers.groq import GroqProvider
-from providers.kimi import KimiProvider
+from providers.kimi import KimiCodingPlanProvider, KimiProvider
 from providers.llamacpp import LlamaCppProvider
 from providers.lmstudio import LMStudioProvider
+from providers.minimax import MinimaxTokenPlanProvider
 from providers.mistral import MistralProvider
 from providers.nvidia_nim import NvidiaNimProvider
 from providers.ollama import OllamaProvider
@@ -28,8 +39,10 @@ from providers.registry import (
     build_provider_config,
     create_provider,
 )
+from providers.volcengine import VolcengineCodingPlanProvider
 from providers.wafer import WaferProvider
 from providers.zai import ZaiProvider
+from providers.zhipu import ZhipuCodingPlanProvider
 
 
 def _make_settings(**overrides):
@@ -67,6 +80,18 @@ def _make_settings(**overrides):
     mock.groq_proxy = ""
     mock.cerebras_api_key = ""
     mock.cerebras_proxy = ""
+    mock.bailian_coding_plan_api_key = "test_bailian_coding_key"
+    mock.bailian_token_plan_api_key = "test_bailian_token_key"
+    mock.volcengine_coding_plan_api_key = "test_volcengine_key"
+    mock.zhipu_coding_plan_api_key = "test_zhipu_key"
+    mock.kimi_coding_plan_api_key = "test_kimi_code_key"
+    mock.minimax_token_plan_api_key = "test_minimax_key"
+    mock.bailian_coding_plan_proxy = ""
+    mock.bailian_token_plan_proxy = ""
+    mock.volcengine_coding_plan_proxy = ""
+    mock.zhipu_coding_plan_proxy = ""
+    mock.kimi_coding_plan_proxy = ""
+    mock.minimax_token_plan_proxy = ""
     mock.provider_rate_limit = 40
     mock.provider_rate_window = 60
     mock.provider_max_concurrency = 5
@@ -128,6 +153,47 @@ def test_zai_provider_config_ignores_stale_base_url_setting():
     )
 
     assert config.base_url == ZAI_DEFAULT_BASE
+
+
+def test_bailian_plan_descriptors_default_base_urls():
+    coding = PROVIDER_DESCRIPTORS["bailian_coding_plan"]
+    token = PROVIDER_DESCRIPTORS["bailian_token_plan"]
+
+    assert coding.default_base_url == BAILIAN_CODING_PLAN_DEFAULT_BASE
+    assert token.default_base_url == BAILIAN_TOKEN_PLAN_DEFAULT_BASE
+
+
+def test_cn_plan_descriptors_default_base_urls():
+    assert (
+        PROVIDER_DESCRIPTORS["volcengine_coding_plan"].default_base_url
+        == VOLCENGINE_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["zhipu_coding_plan"].default_base_url
+        == ZHIPU_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["kimi_coding_plan"].default_base_url
+        == KIMI_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["minimax_token_plan"].default_base_url
+        == MINIMAX_TOKEN_PLAN_DEFAULT_BASE
+    )
+
+
+def test_plan_descriptors_use_native_anthropic_transport():
+    for provider_id in (
+        "bailian_coding_plan",
+        "bailian_token_plan",
+        "volcengine_coding_plan",
+        "zhipu_coding_plan",
+        "kimi_coding_plan",
+        "minimax_token_plan",
+    ):
+        descriptor = PROVIDER_DESCRIPTORS[provider_id]
+        assert descriptor.transport_type == "anthropic_messages"
+        assert "native_anthropic" in descriptor.capabilities
 
 
 def test_opencode_go_provider_config_uses_correct_base_url_and_name():
@@ -196,6 +262,27 @@ def test_create_provider_instantiates_each_builtin():
     ):
         for provider_id, provider_cls in cases.items():
             assert isinstance(create_provider(provider_id, settings), provider_cls)
+
+    with patch("httpx.AsyncClient"):
+        assert isinstance(
+            create_provider("bailian_coding_plan", settings), BailianCodingPlanProvider
+        )
+        assert isinstance(
+            create_provider("bailian_token_plan", settings), BailianTokenPlanProvider
+        )
+        assert isinstance(
+            create_provider("volcengine_coding_plan", settings),
+            VolcengineCodingPlanProvider,
+        )
+        assert isinstance(
+            create_provider("zhipu_coding_plan", settings), ZhipuCodingPlanProvider
+        )
+        assert isinstance(
+            create_provider("kimi_coding_plan", settings), KimiCodingPlanProvider
+        )
+        assert isinstance(
+            create_provider("minimax_token_plan", settings), MinimaxTokenPlanProvider
+        )
 
 
 def test_provider_registry_caches_by_provider_id():
