@@ -32,7 +32,7 @@ class TestSettings:
         monkeypatch.delenv("HTTP_CONNECT_TIMEOUT", raising=False)
         monkeypatch.setitem(Settings.model_config, "env_file", ())
         settings = Settings()
-        assert settings.model == "nvidia_nim/z-ai/glm4.7"
+        assert settings.model == "nvidia_nim/nvidia/nemotron-3-super-120b-a12b"
         assert isinstance(settings.provider_rate_limit, int)
         assert isinstance(settings.provider_rate_window, int)
         assert isinstance(settings.nim.temperature, float)
@@ -758,22 +758,52 @@ class TestPerModelMapping:
 
         assert Settings.parse_provider_type("nvidia_nim/meta/llama") == "nvidia_nim"
         assert Settings.parse_provider_type("open_router/deepseek/r1") == "open_router"
+        assert (
+            Settings.parse_provider_type("mistral/devstral-small-latest") == "mistral"
+        )
+        assert (
+            Settings.parse_provider_type("mistral_codestral/codestral-latest")
+            == "mistral_codestral"
+        )
         assert Settings.parse_provider_type("deepseek/deepseek-chat") == "deepseek"
         assert Settings.parse_provider_type("lmstudio/qwen") == "lmstudio"
         assert Settings.parse_provider_type("llamacpp/model") == "llamacpp"
         assert Settings.parse_provider_type("ollama/llama3.1") == "ollama"
         assert Settings.parse_provider_type("wafer/DeepSeek-V4-Pro") == "wafer"
+        assert (
+            Settings.parse_provider_type("gemini/models/gemini-3.1-flash-lite")
+            == "gemini"
+        )
+        assert Settings.parse_provider_type("groq/llama-3.3-70b-versatile") == "groq"
+        assert Settings.parse_provider_type("cerebras/llama3.1-8b") == "cerebras"
 
     def test_parse_model_name(self):
         """parse_model_name extracts model name from model string."""
         from config.settings import Settings
 
         assert Settings.parse_model_name("nvidia_nim/meta/llama") == "meta/llama"
+        assert (
+            Settings.parse_model_name("mistral/devstral-small-latest")
+            == "devstral-small-latest"
+        )
+        assert (
+            Settings.parse_model_name("mistral_codestral/codestral-latest")
+            == "codestral-latest"
+        )
         assert Settings.parse_model_name("deepseek/deepseek-chat") == "deepseek-chat"
         assert Settings.parse_model_name("lmstudio/qwen") == "qwen"
         assert Settings.parse_model_name("llamacpp/model") == "model"
         assert Settings.parse_model_name("ollama/llama3.1") == "llama3.1"
         assert Settings.parse_model_name("wafer/DeepSeek-V4-Pro") == "DeepSeek-V4-Pro"
+        assert (
+            Settings.parse_model_name("gemini/models/gemini-3.1-flash-lite")
+            == "models/gemini-3.1-flash-lite"
+        )
+        assert (
+            Settings.parse_model_name("groq/llama-3.3-70b-versatile")
+            == "llama-3.3-70b-versatile"
+        )
+        assert Settings.parse_model_name("cerebras/llama3.1-8b") == "llama3.1-8b"
 
     def test_configured_chat_model_refs_collects_unique_models_with_sources(
         self, monkeypatch

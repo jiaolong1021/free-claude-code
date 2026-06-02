@@ -107,14 +107,7 @@ def require_api_key(
         or request.headers.get("anthropic-auth-token")
     )
     if not header:
-        raise HTTPException(
-            status_code=401,
-            detail=(
-                "Missing API key. Set ANTHROPIC_AUTH_TOKEN (or x-api-key) on the "
-                "Claude client to match this proxy's ANTHROPIC_AUTH_TOKEN, or run "
-                "`fcc-claude` which configures it automatically."
-            ),
-        )
+        raise HTTPException(status_code=401, detail="Missing API key")
 
     # Support both raw key in X-API-Key and Bearer token in Authorization
     token = header
@@ -130,21 +123,7 @@ def require_api_key(
     if not secrets.compare_digest(
         token.encode("utf-8"), anthropic_auth_token.encode("utf-8")
     ):
-        detail = "Invalid API key"
-        if token.startswith("sk-sp-"):
-            detail = (
-                "Invalid API key: a Bailian Coding Plan key (sk-sp-…) was sent to "
-                "this local proxy. Configure BAILIAN_CODING_PLAN_API_KEY in Admin "
-                "(FCC→Bailian) and set the client's ANTHROPIC_AUTH_TOKEN to this "
-                "proxy's token (default freecc), not the sk-sp key."
-            )
-        elif token.startswith("sk-"):
-            detail = (
-                "Invalid API key: a DashScope/Bailian API key was sent to this local "
-                "proxy. Use ANTHROPIC_AUTH_TOKEN for Claude→FCC only; put provider "
-                "keys in Admin (e.g. BAILIAN_CODING_PLAN_API_KEY)."
-            )
-        raise HTTPException(status_code=401, detail=detail)
+        raise HTTPException(status_code=401, detail="Invalid API key")
 
 
 def get_provider() -> BaseProvider:

@@ -110,6 +110,12 @@ class Settings(BaseSettings):
     # ==================== OpenRouter Config ====================
     open_router_api_key: str = Field(default="", validation_alias="OPENROUTER_API_KEY")
 
+    # ==================== Mistral La Plateforme ====================
+    mistral_api_key: str = Field(default="", validation_alias="MISTRAL_API_KEY")
+
+    # ==================== Mistral Codestral (codestral.mistral.ai) ====================
+    codestral_api_key: str = Field(default="", validation_alias="CODESTRAL_API_KEY")
+
     # ==================== DeepSeek Config ====================
     deepseek_api_key: str = Field(default="", validation_alias="DEEPSEEK_API_KEY")
 
@@ -129,51 +135,14 @@ class Settings(BaseSettings):
     # ==================== Fireworks AI Config ====================
     fireworks_api_key: str = Field(default="", validation_alias="FIREWORKS_API_KEY")
 
-    # ==================== Alibaba Bailian Coding / Token Plan ====================
-    bailian_coding_plan_api_key: str = Field(
-        default="", validation_alias="BAILIAN_CODING_PLAN_API_KEY"
-    )
-    bailian_token_plan_api_key: str = Field(
-        default="", validation_alias="BAILIAN_TOKEN_PLAN_API_KEY"
-    )
-    bailian_coding_plan_base_url: str = Field(
-        default="",
-        validation_alias="BAILIAN_CODING_PLAN_BASE_URL",
-    )
-    bailian_token_plan_base_url: str = Field(
-        default="",
-        validation_alias="BAILIAN_TOKEN_PLAN_BASE_URL",
-    )
+    # ==================== Google Gemini (Google AI Studio) ====================
+    gemini_api_key: str = Field(default="", validation_alias="GEMINI_API_KEY")
 
-    # ==================== Volcengine / Zhipu / Kimi / MiniMax Plans ====================
-    volcengine_coding_plan_api_key: str = Field(
-        default="", validation_alias="VOLCENGINE_CODING_PLAN_API_KEY"
-    )
-    volcengine_coding_plan_base_url: str = Field(
-        default="",
-        validation_alias="VOLCENGINE_CODING_PLAN_BASE_URL",
-    )
-    zhipu_coding_plan_api_key: str = Field(
-        default="", validation_alias="ZHIPU_CODING_PLAN_API_KEY"
-    )
-    zhipu_coding_plan_base_url: str = Field(
-        default="",
-        validation_alias="ZHIPU_CODING_PLAN_BASE_URL",
-    )
-    kimi_coding_plan_api_key: str = Field(
-        default="", validation_alias="KIMI_CODING_PLAN_API_KEY"
-    )
-    kimi_coding_plan_base_url: str = Field(
-        default="",
-        validation_alias="KIMI_CODING_PLAN_BASE_URL",
-    )
-    minimax_token_plan_api_key: str = Field(
-        default="", validation_alias="MINIMAX_TOKEN_PLAN_API_KEY"
-    )
-    minimax_token_plan_base_url: str = Field(
-        default="",
-        validation_alias="MINIMAX_TOKEN_PLAN_BASE_URL",
-    )
+    # ==================== Groq (OpenAI-compatible) ====================
+    groq_api_key: str = Field(default="", validation_alias="GROQ_API_KEY")
+
+    # ==================== Cerebras Inference (OpenAI-compatible) ====================
+    cerebras_api_key: str = Field(default="", validation_alias="CEREBRAS_API_KEY")
 
     # ==================== Messaging Platform Selection ====================
     # Valid: "telegram" | "discord" | "none"
@@ -211,7 +180,7 @@ class Settings(BaseSettings):
     # ==================== Model ====================
     # All Claude model requests are mapped to this single model (fallback)
     # Format: provider_type/model/name
-    model: str = "nvidia_nim/z-ai/glm4.7"
+    model: str = "nvidia_nim/nvidia/nemotron-3-super-120b-a12b"
 
     # Per-model overrides (optional, falls back to MODEL)
     # Each can use a different provider
@@ -222,6 +191,8 @@ class Settings(BaseSettings):
     # ==================== Per-Provider Proxy ====================
     nvidia_nim_proxy: str = Field(default="", validation_alias="NVIDIA_NIM_PROXY")
     open_router_proxy: str = Field(default="", validation_alias="OPENROUTER_PROXY")
+    mistral_proxy: str = Field(default="", validation_alias="MISTRAL_PROXY")
+    codestral_proxy: str = Field(default="", validation_alias="CODESTRAL_PROXY")
     lmstudio_proxy: str = Field(default="", validation_alias="LMSTUDIO_PROXY")
     llamacpp_proxy: str = Field(default="", validation_alias="LLAMACPP_PROXY")
     kimi_proxy: str = Field(default="", validation_alias="KIMI_PROXY")
@@ -230,24 +201,9 @@ class Settings(BaseSettings):
     opencode_go_proxy: str = Field(default="", validation_alias="OPENCODE_GO_PROXY")
     zai_proxy: str = Field(default="", validation_alias="ZAI_PROXY")
     fireworks_proxy: str = Field(default="", validation_alias="FIREWORKS_PROXY")
-    bailian_coding_plan_proxy: str = Field(
-        default="", validation_alias="BAILIAN_CODING_PLAN_PROXY"
-    )
-    bailian_token_plan_proxy: str = Field(
-        default="", validation_alias="BAILIAN_TOKEN_PLAN_PROXY"
-    )
-    volcengine_coding_plan_proxy: str = Field(
-        default="", validation_alias="VOLCENGINE_CODING_PLAN_PROXY"
-    )
-    zhipu_coding_plan_proxy: str = Field(
-        default="", validation_alias="ZHIPU_CODING_PLAN_PROXY"
-    )
-    kimi_coding_plan_proxy: str = Field(
-        default="", validation_alias="KIMI_CODING_PLAN_PROXY"
-    )
-    minimax_token_plan_proxy: str = Field(
-        default="", validation_alias="MINIMAX_TOKEN_PLAN_PROXY"
-    )
+    gemini_proxy: str = Field(default="", validation_alias="GEMINI_PROXY")
+    groq_proxy: str = Field(default="", validation_alias="GROQ_PROXY")
+    cerebras_proxy: str = Field(default="", validation_alias="CEREBRAS_PROXY")
 
     # ==================== Provider Rate Limiting ====================
     provider_rate_limit: int = Field(default=40, validation_alias="PROVIDER_RATE_LIMIT")

@@ -44,6 +44,20 @@ def _create_open_router(config: ProviderConfig, _settings: Settings) -> BaseProv
     return OpenRouterProvider(config)
 
 
+def _create_mistral(config: ProviderConfig, _settings: Settings) -> BaseProvider:
+    from providers.mistral import MistralProvider
+
+    return MistralProvider(config)
+
+
+def _create_mistral_codestral(
+    config: ProviderConfig, _settings: Settings
+) -> BaseProvider:
+    from providers.codestral import CodestralProvider
+
+    return CodestralProvider(config)
+
+
 def _create_deepseek(config: ProviderConfig, _settings: Settings) -> BaseProvider:
     from providers.deepseek import DeepSeekProvider
 
@@ -104,73 +118,42 @@ def _create_fireworks(config: ProviderConfig, _settings: Settings) -> BaseProvid
     return FireworksProvider(config)
 
 
-def _create_bailian_coding_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.bailian import BailianCodingPlanProvider
+def _create_gemini(config: ProviderConfig, _settings: Settings) -> BaseProvider:
+    from providers.gemini import GeminiProvider
 
-    return BailianCodingPlanProvider(config)
+    return GeminiProvider(config)
 
 
-def _create_bailian_token_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.bailian import BailianTokenPlanProvider
+def _create_groq(config: ProviderConfig, _settings: Settings) -> BaseProvider:
+    from providers.groq import GroqProvider
 
-    return BailianTokenPlanProvider(config)
+    return GroqProvider(config)
 
 
-def _create_volcengine_coding_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.volcengine import VolcengineCodingPlanProvider
+def _create_cerebras(config: ProviderConfig, _settings: Settings) -> BaseProvider:
+    from providers.cerebras import CerebrasProvider
 
-    return VolcengineCodingPlanProvider(config)
-
-
-def _create_zhipu_coding_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.zhipu import ZhipuCodingPlanProvider
-
-    return ZhipuCodingPlanProvider(config)
-
-
-def _create_kimi_coding_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.kimi import KimiCodingPlanProvider
-
-    return KimiCodingPlanProvider(config)
-
-
-def _create_minimax_token_plan(
-    config: ProviderConfig, _settings: Settings
-) -> BaseProvider:
-    from providers.minimax import MinimaxTokenPlanProvider
-
-    return MinimaxTokenPlanProvider(config)
+    return CerebrasProvider(config)
 
 
 PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "nvidia_nim": _create_nvidia_nim,
     "open_router": _create_open_router,
+    "gemini": _create_gemini,
     "deepseek": _create_deepseek,
+    "mistral": _create_mistral,
+    "mistral_codestral": _create_mistral_codestral,
+    "opencode": _create_opencode,
+    "opencode_go": _create_opencode_go,
+    "wafer": _create_wafer,
+    "kimi": _create_kimi,
+    "cerebras": _create_cerebras,
+    "groq": _create_groq,
+    "fireworks": _create_fireworks,
+    "zai": _create_zai,
     "lmstudio": _create_lmstudio,
     "llamacpp": _create_llamacpp,
     "ollama": _create_ollama,
-    "kimi": _create_kimi,
-    "wafer": _create_wafer,
-    "opencode": _create_opencode,
-    "opencode_go": _create_opencode_go,
-    "zai": _create_zai,
-    "fireworks": _create_fireworks,
-    "bailian_coding_plan": _create_bailian_coding_plan,
-    "bailian_token_plan": _create_bailian_token_plan,
-    "volcengine_coding_plan": _create_volcengine_coding_plan,
-    "zhipu_coding_plan": _create_zhipu_coding_plan,
-    "kimi_coding_plan": _create_kimi_coding_plan,
-    "minimax_token_plan": _create_minimax_token_plan,
 }
 
 if set(PROVIDER_DESCRIPTORS) != set(SUPPORTED_PROVIDER_IDS) or set(

@@ -35,29 +35,6 @@ def test_anthropic_auth_token_required_and_accepts_x_api_key():
     app.dependency_overrides.clear()
 
 
-def test_invalid_api_key_hints_when_bailian_plan_key_sent_to_proxy():
-    client = TestClient(app)
-    settings = Settings()
-    settings.anthropic_auth_token = "freecc"
-    app.dependency_overrides[get_settings] = lambda: settings
-
-    payload = {
-        "model": "claude-3-sonnet",
-        "messages": [{"role": "user", "content": "hello"}],
-    }
-
-    response = client.post(
-        "/v1/messages/count_tokens",
-        json=payload,
-        headers={"X-API-Key": "sk-sp-bailian-plan-key"},
-    )
-
-    assert response.status_code == 401
-    assert "BAILIAN_CODING_PLAN_API_KEY" in response.json()["detail"]
-
-    app.dependency_overrides.clear()
-
-
 def test_anthropic_auth_token_accepts_bearer_authorization():
     client = TestClient(app)
     settings = Settings()

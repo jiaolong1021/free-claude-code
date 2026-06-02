@@ -135,6 +135,29 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         secret=True,
     ),
     ConfigFieldSpec(
+        "MISTRAL_API_KEY",
+        "Mistral API Key",
+        "providers",
+        "secret",
+        settings_attr="mistral_api_key",
+        secret=True,
+        description=(
+            "Mistral La Plateforme (api.mistral.ai); Experiment plan is free tier with rate limits."
+        ),
+    ),
+    ConfigFieldSpec(
+        "CODESTRAL_API_KEY",
+        "Codestral API Key",
+        "providers",
+        "secret",
+        settings_attr="codestral_api_key",
+        secret=True,
+        description=(
+            "Mistral Codestral endpoint (codestral.mistral.ai); distinct from Mistral "
+            "La Plateforme ``MISTRAL_API_KEY``. See Mistral docs for coding/FIM domains."
+        ),
+    ),
+    ConfigFieldSpec(
         "DEEPSEEK_API_KEY",
         "DeepSeek API Key",
         "providers",
@@ -189,45 +212,44 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         description="Fireworks AI inference API key.",
     ),
     ConfigFieldSpec(
-        "BAILIAN_CODING_PLAN_API_KEY",
-        "Bailian Coding Plan API Key",
+        "GEMINI_API_KEY",
+        "Gemini API Key",
         "providers",
         "secret",
-        settings_attr="bailian_coding_plan_api_key",
+        settings_attr="gemini_api_key",
         secret=True,
         description=(
-            "Alibaba Bailian Coding Plan key (sk-sp-*). Use with the Coding Plan "
-            "OpenAI-compatible base URL, not the pay-as-you-go DashScope key."
+            "Google AI Studio Gemini API key (Google AI Studio / Gemini API "
+            "[OpenAI-compatible](https://ai.google.dev/gemini-api/docs/openai)); "
+            "free tier has per-model rate limits and data may be used for improvement "
+            "outside the UK/CH/EEA/EU."
         ),
     ),
     ConfigFieldSpec(
-        "BAILIAN_TOKEN_PLAN_API_KEY",
-        "Bailian Token Plan API Key",
+        "GROQ_API_KEY",
+        "Groq API Key",
         "providers",
         "secret",
-        settings_attr="bailian_token_plan_api_key",
+        settings_attr="groq_api_key",
         secret=True,
-        description="Alibaba Bailian Token Plan team edition API key.",
-    ),
-    ConfigFieldSpec(
-        "BAILIAN_CODING_PLAN_BASE_URL",
-        "Bailian Coding Plan Base URL",
-        "providers",
-        settings_attr="bailian_coding_plan_base_url",
-        default="https://coding.dashscope.aliyuncs.com/apps/anthropic/v1",
         description=(
-            "Anthropic-compatible Coding Plan endpoint. Leave blank for China; set "
-            "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1 for "
-            "international plans."
+            "GroqCloud OpenAI-compatible API key ([console.groq.com/keys]("
+            "https://console.groq.com/keys)); see Groq "
+            "[OpenAI compatibility docs](https://console.groq.com/docs/openai)."
         ),
     ),
     ConfigFieldSpec(
-        "BAILIAN_TOKEN_PLAN_BASE_URL",
-        "Bailian Token Plan Base URL",
+        "CEREBRAS_API_KEY",
+        "Cerebras API Key",
         "providers",
-        settings_attr="bailian_token_plan_base_url",
-        default="https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1",
-        advanced=True,
+        "secret",
+        settings_attr="cerebras_api_key",
+        secret=True,
+        description=(
+            "Cerebras Inference API key (create in [Cloud Console](https://cloud.cerebras.ai)); "
+            "see [Quickstart](https://inference-docs.cerebras.ai/quickstart) and "
+            "[OpenAI compatibility](https://inference-docs.cerebras.ai/resources/openai)."
+        ),
     ),
     ConfigFieldSpec(
         "LM_STUDIO_BASE_URL",
@@ -265,6 +287,24 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "secret",
         settings_attr="open_router_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "MISTRAL_PROXY",
+        "Mistral Proxy",
+        "providers",
+        "secret",
+        settings_attr="mistral_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "CODESTRAL_PROXY",
+        "Codestral Proxy",
+        "providers",
+        "secret",
+        settings_attr="codestral_proxy",
         secret=True,
         advanced=True,
     ),
@@ -341,136 +381,29 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         advanced=True,
     ),
     ConfigFieldSpec(
-        "BAILIAN_CODING_PLAN_PROXY",
-        "Bailian Coding Plan Proxy",
+        "GEMINI_PROXY",
+        "Gemini Proxy",
         "providers",
         "secret",
-        settings_attr="bailian_coding_plan_proxy",
+        settings_attr="gemini_proxy",
         secret=True,
         advanced=True,
     ),
     ConfigFieldSpec(
-        "BAILIAN_TOKEN_PLAN_PROXY",
-        "Bailian Token Plan Proxy",
+        "GROQ_PROXY",
+        "Groq Proxy",
         "providers",
         "secret",
-        settings_attr="bailian_token_plan_proxy",
+        settings_attr="groq_proxy",
         secret=True,
         advanced=True,
     ),
     ConfigFieldSpec(
-        "VOLCENGINE_CODING_PLAN_API_KEY",
-        "Volcengine Coding Plan API Key",
+        "CEREBRAS_PROXY",
+        "Cerebras Proxy",
         "providers",
         "secret",
-        settings_attr="volcengine_coding_plan_api_key",
-        secret=True,
-        description=(
-            "Volcengine Ark Coding Plan key. Use the Coding Plan Anthropic endpoint "
-            "(ark.cn-beijing.volces.com/api/coding), not the pay-as-you-go API URL."
-        ),
-    ),
-    ConfigFieldSpec(
-        "VOLCENGINE_CODING_PLAN_BASE_URL",
-        "Volcengine Coding Plan Base URL",
-        "providers",
-        settings_attr="volcengine_coding_plan_base_url",
-        default="https://ark.cn-beijing.volces.com/api/coding/v1",
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "ZHIPU_CODING_PLAN_API_KEY",
-        "Zhipu Coding Plan API Key",
-        "providers",
-        "secret",
-        settings_attr="zhipu_coding_plan_api_key",
-        secret=True,
-        description=(
-            "Zhipu GLM Coding Plan key from open.bigmodel.cn. Use the Anthropic "
-            "Coding Plan endpoint, not the pay-as-you-go paas/v4 URL."
-        ),
-    ),
-    ConfigFieldSpec(
-        "ZHIPU_CODING_PLAN_BASE_URL",
-        "Zhipu Coding Plan Base URL",
-        "providers",
-        settings_attr="zhipu_coding_plan_base_url",
-        default="https://open.bigmodel.cn/api/anthropic/v1",
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "KIMI_CODING_PLAN_API_KEY",
-        "Kimi Coding Plan API Key",
-        "providers",
-        "secret",
-        settings_attr="kimi_coding_plan_api_key",
-        secret=True,
-        description=(
-            "Kimi Code subscription key from kimi.com/code. Separate from the "
-            "Moonshot pay-as-you-go KIMI_API_KEY."
-        ),
-    ),
-    ConfigFieldSpec(
-        "KIMI_CODING_PLAN_BASE_URL",
-        "Kimi Coding Plan Base URL",
-        "providers",
-        settings_attr="kimi_coding_plan_base_url",
-        default="https://api.kimi.com/coding/v1",
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "MINIMAX_TOKEN_PLAN_API_KEY",
-        "MiniMax Token Plan API Key",
-        "providers",
-        "secret",
-        settings_attr="minimax_token_plan_api_key",
-        secret=True,
-        description=(
-            "MiniMax Token Plan subscription key (not interchangeable with "
-            "pay-as-you-go Open Platform API keys)."
-        ),
-    ),
-    ConfigFieldSpec(
-        "MINIMAX_TOKEN_PLAN_BASE_URL",
-        "MiniMax Token Plan Base URL",
-        "providers",
-        settings_attr="minimax_token_plan_base_url",
-        default="https://api.minimax.io/anthropic/v1",
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "VOLCENGINE_CODING_PLAN_PROXY",
-        "Volcengine Coding Plan Proxy",
-        "providers",
-        "secret",
-        settings_attr="volcengine_coding_plan_proxy",
-        secret=True,
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "ZHIPU_CODING_PLAN_PROXY",
-        "Zhipu Coding Plan Proxy",
-        "providers",
-        "secret",
-        settings_attr="zhipu_coding_plan_proxy",
-        secret=True,
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "KIMI_CODING_PLAN_PROXY",
-        "Kimi Coding Plan Proxy",
-        "providers",
-        "secret",
-        settings_attr="kimi_coding_plan_proxy",
-        secret=True,
-        advanced=True,
-    ),
-    ConfigFieldSpec(
-        "MINIMAX_TOKEN_PLAN_PROXY",
-        "MiniMax Token Plan Proxy",
-        "providers",
-        "secret",
-        settings_attr="minimax_token_plan_proxy",
+        settings_attr="cerebras_proxy",
         secret=True,
         advanced=True,
     ),
@@ -479,7 +412,7 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "Default Model",
         "models",
         settings_attr="model",
-        default="nvidia_nim/z-ai/glm4.7",
+        default="nvidia_nim/nvidia/nemotron-3-super-120b-a12b",
         description="Fallback provider/model route for all Claude model names.",
     ),
     ConfigFieldSpec(
@@ -875,6 +808,18 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         advanced=True,
     ),
     ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_MISTRAL",
+        "Smoke Mistral Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_MISTRAL_CODESTRAL",
+        "Smoke Mistral Codestral Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
         "FCC_SMOKE_MODEL_DEEPSEEK",
         "Smoke DeepSeek Model",
         "smoke",
@@ -925,6 +870,30 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
     ConfigFieldSpec(
         "FCC_SMOKE_MODEL_ZAI",
         "Smoke Z.ai Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_FIREWORKS",
+        "Smoke Fireworks Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_GEMINI",
+        "Smoke Gemini Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_GROQ",
+        "Smoke Groq Model",
+        "smoke",
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "FCC_SMOKE_MODEL_CEREBRAS",
+        "Smoke Cerebras Model",
         "smoke",
         advanced=True,
     ),

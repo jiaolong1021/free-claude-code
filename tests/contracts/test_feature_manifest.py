@@ -4,21 +4,23 @@ import re
 from pathlib import Path
 
 from messaging.platforms.factory import create_messaging_platform
-from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
 from providers.base import BaseProvider
+from providers.cerebras import CerebrasProvider
+from providers.codestral import CodestralProvider
 from providers.deepseek import DeepSeekProvider
-from providers.kimi import KimiCodingPlanProvider
+from providers.fireworks import FireworksProvider
+from providers.gemini import GeminiProvider
+from providers.groq import GroqProvider
+from providers.kimi import KimiProvider
 from providers.llamacpp import LlamaCppProvider
 from providers.lmstudio import LMStudioProvider
-from providers.minimax import MinimaxTokenPlanProvider
+from providers.mistral import MistralProvider
 from providers.nvidia_nim import NvidiaNimProvider
 from providers.ollama import OllamaProvider
 from providers.open_router import OpenRouterProvider
 from providers.opencode import OpenCodeProvider
-from providers.volcengine import VolcengineCodingPlanProvider
 from providers.wafer import WaferProvider
 from providers.zai import ZaiProvider
-from providers.zhipu import ZhipuCodingPlanProvider
 from smoke.features import FEATURE_INVENTORY, README_FEATURES, feature_ids
 
 VALID_SOURCE = {"readme", "public_surface"}
@@ -77,7 +79,11 @@ def test_provider_and_platform_registries_include_advertised_builtins() -> None:
     provider_classes = {
         "nvidia_nim": NvidiaNimProvider,
         "open_router": OpenRouterProvider,
+        "mistral": MistralProvider,
+        "mistral_codestral": CodestralProvider,
         "deepseek": DeepSeekProvider,
+        "kimi": KimiProvider,
+        "fireworks": FireworksProvider,
         "lmstudio": LMStudioProvider,
         "llamacpp": LlamaCppProvider,
         "ollama": OllamaProvider,
@@ -85,12 +91,9 @@ def test_provider_and_platform_registries_include_advertised_builtins() -> None:
         "opencode": OpenCodeProvider,
         "opencode_go": OpenCodeProvider,
         "zai": ZaiProvider,
-        "bailian_coding_plan": BailianCodingPlanProvider,
-        "bailian_token_plan": BailianTokenPlanProvider,
-        "volcengine_coding_plan": VolcengineCodingPlanProvider,
-        "zhipu_coding_plan": ZhipuCodingPlanProvider,
-        "kimi_coding_plan": KimiCodingPlanProvider,
-        "minimax_token_plan": MinimaxTokenPlanProvider,
+        "gemini": GeminiProvider,
+        "groq": GroqProvider,
+        "cerebras": CerebrasProvider,
     }
     for provider_class in provider_classes.values():
         assert issubclass(provider_class, BaseProvider)

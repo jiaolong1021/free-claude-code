@@ -32,11 +32,6 @@ def get_user_facing_error_message(
         return "Provider authentication failed. Check API key."
     if isinstance(e, openai.BadRequestError):
         return "Invalid request sent to provider."
-    if isinstance(e, openai.NotFoundError):
-        return (
-            "Provider endpoint or model was not found (HTTP 404). "
-            "Check MODEL uses a supported upstream model id and the plan Base URL."
-        )
 
     name = type(e).__name__
     status_code = getattr(e, "status_code", None)

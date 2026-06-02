@@ -5,24 +5,19 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 from config.nim import NimSettings
-from config.provider_catalog import (
-    BAILIAN_CODING_PLAN_DEFAULT_BASE,
-    BAILIAN_TOKEN_PLAN_DEFAULT_BASE,
-    KIMI_CODING_PLAN_DEFAULT_BASE,
-    MINIMAX_TOKEN_PLAN_DEFAULT_BASE,
-    PROVIDER_CATALOG,
-    VOLCENGINE_CODING_PLAN_DEFAULT_BASE,
-    ZAI_DEFAULT_BASE,
-    ZHIPU_CODING_PLAN_DEFAULT_BASE,
-)
+from config.provider_catalog import PROVIDER_CATALOG, ZAI_DEFAULT_BASE
 from config.provider_ids import SUPPORTED_PROVIDER_IDS
-from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
+from providers.cerebras import CerebrasProvider
+from providers.codestral import CodestralProvider
 from providers.deepseek import DeepSeekProvider
 from providers.exceptions import UnknownProviderTypeError
-from providers.kimi import KimiCodingPlanProvider
+from providers.fireworks import FireworksProvider
+from providers.gemini import GeminiProvider
+from providers.groq import GroqProvider
+from providers.kimi import KimiProvider
 from providers.llamacpp import LlamaCppProvider
 from providers.lmstudio import LMStudioProvider
-from providers.minimax import MinimaxTokenPlanProvider
+from providers.mistral import MistralProvider
 from providers.nvidia_nim import NvidiaNimProvider
 from providers.ollama import OllamaProvider
 from providers.open_router import OpenRouterProvider
@@ -33,10 +28,8 @@ from providers.registry import (
     build_provider_config,
     create_provider,
 )
-from providers.volcengine import VolcengineCodingPlanProvider
 from providers.wafer import WaferProvider
 from providers.zai import ZaiProvider
-from providers.zhipu import ZhipuCodingPlanProvider
 
 
 def _make_settings(**overrides):
@@ -45,16 +38,12 @@ def _make_settings(**overrides):
     mock.provider_type = "nvidia_nim"
     mock.nvidia_nim_api_key = "test_key"
     mock.open_router_api_key = "test_openrouter_key"
+    mock.mistral_api_key = "test_mistral_key"
+    mock.codestral_api_key = "test_codestral_key"
     mock.deepseek_api_key = "test_deepseek_key"
     mock.wafer_api_key = "test_wafer_key"
     mock.opencode_api_key = "test_opencode_key"
     mock.zai_api_key = "test_zai_key"
-    mock.bailian_coding_plan_api_key = "test_bailian_coding_key"
-    mock.bailian_token_plan_api_key = "test_bailian_token_key"
-    mock.volcengine_coding_plan_api_key = "test_volcengine_key"
-    mock.zhipu_coding_plan_api_key = "test_zhipu_key"
-    mock.kimi_coding_plan_api_key = "test_kimi_code_key"
-    mock.minimax_token_plan_api_key = "test_minimax_key"
     mock.lm_studio_base_url = "http://localhost:1234/v1"
     mock.llamacpp_base_url = "http://localhost:8080/v1"
     mock.ollama_base_url = "http://localhost:11434"
@@ -62,17 +51,22 @@ def _make_settings(**overrides):
     mock.open_router_proxy = ""
     mock.lmstudio_proxy = ""
     mock.llamacpp_proxy = ""
+    mock.mistral_proxy = ""
+    mock.codestral_proxy = ""
     mock.kimi_proxy = ""
+    mock.kimi_api_key = "test_kimi_key"
     mock.wafer_proxy = ""
     mock.opencode_proxy = ""
     mock.opencode_go_proxy = ""
     mock.zai_proxy = ""
-    mock.bailian_coding_plan_proxy = ""
-    mock.bailian_token_plan_proxy = ""
-    mock.volcengine_coding_plan_proxy = ""
-    mock.zhipu_coding_plan_proxy = ""
-    mock.kimi_coding_plan_proxy = ""
-    mock.minimax_token_plan_proxy = ""
+    mock.fireworks_proxy = ""
+    mock.fireworks_api_key = "test_fireworks_key"
+    mock.gemini_api_key = ""
+    mock.gemini_proxy = ""
+    mock.groq_api_key = ""
+    mock.groq_proxy = ""
+    mock.cerebras_api_key = ""
+    mock.cerebras_proxy = ""
     mock.provider_rate_limit = 40
     mock.provider_rate_window = 60
     mock.provider_max_concurrency = 5
@@ -125,71 +119,6 @@ def test_zai_descriptor_uses_fixed_cloud_base_url():
     assert descriptor.base_url_attr is None
 
 
-def test_bailian_plan_descriptors_default_base_urls():
-    coding = PROVIDER_DESCRIPTORS["bailian_coding_plan"]
-    token = PROVIDER_DESCRIPTORS["bailian_token_plan"]
-
-    assert coding.default_base_url == BAILIAN_CODING_PLAN_DEFAULT_BASE
-    assert coding.base_url_attr == "bailian_coding_plan_base_url"
-    assert token.default_base_url == BAILIAN_TOKEN_PLAN_DEFAULT_BASE
-    assert token.base_url_attr == "bailian_token_plan_base_url"
-
-
-def test_bailian_coding_plan_config_preserves_custom_base_url():
-    descriptor = PROVIDER_DESCRIPTORS["bailian_coding_plan"]
-    config = build_provider_config(
-        descriptor,
-        _make_settings(
-            bailian_coding_plan_api_key="sk-sp-test",
-            bailian_coding_plan_base_url=(
-                "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1"
-            ),
-        ),
-    )
-    assert (
-        config.base_url
-        == "https://coding-intl.dashscope.aliyuncs.com/apps/anthropic/v1"
-    )
-
-
-def test_bailian_plan_descriptors_use_native_anthropic_transport():
-    for provider_id in ("bailian_coding_plan", "bailian_token_plan"):
-        descriptor = PROVIDER_DESCRIPTORS[provider_id]
-        assert descriptor.transport_type == "anthropic_messages"
-        assert "native_anthropic" in descriptor.capabilities
-
-
-def test_cn_plan_descriptors_default_base_urls():
-    assert (
-        PROVIDER_DESCRIPTORS["volcengine_coding_plan"].default_base_url
-        == VOLCENGINE_CODING_PLAN_DEFAULT_BASE
-    )
-    assert (
-        PROVIDER_DESCRIPTORS["zhipu_coding_plan"].default_base_url
-        == ZHIPU_CODING_PLAN_DEFAULT_BASE
-    )
-    assert (
-        PROVIDER_DESCRIPTORS["kimi_coding_plan"].default_base_url
-        == KIMI_CODING_PLAN_DEFAULT_BASE
-    )
-    assert (
-        PROVIDER_DESCRIPTORS["minimax_token_plan"].default_base_url
-        == MINIMAX_TOKEN_PLAN_DEFAULT_BASE
-    )
-
-
-def test_cn_plan_descriptors_use_native_anthropic_transport():
-    for provider_id in (
-        "volcengine_coding_plan",
-        "zhipu_coding_plan",
-        "kimi_coding_plan",
-        "minimax_token_plan",
-    ):
-        descriptor = PROVIDER_DESCRIPTORS[provider_id]
-        assert descriptor.transport_type == "anthropic_messages"
-        assert "native_anthropic" in descriptor.capabilities
-
-
 def test_zai_provider_config_ignores_stale_base_url_setting():
     descriptor = PROVIDER_DESCRIPTORS["zai"]
 
@@ -235,10 +164,20 @@ def test_create_provider_uses_native_openrouter_by_default():
 
 
 def test_create_provider_instantiates_each_builtin():
-    settings = _make_settings()
+    settings = _make_settings(
+        gemini_api_key="test_gemini_key",
+        groq_api_key="test_groq_key",
+        cerebras_api_key="test_cerebras_key",
+        fireworks_api_key="test_fireworks_key",
+        kimi_api_key="test_kimi_key",
+    )
     cases = {
         "nvidia_nim": NvidiaNimProvider,
+        "mistral": MistralProvider,
+        "mistral_codestral": CodestralProvider,
         "deepseek": DeepSeekProvider,
+        "kimi": KimiProvider,
+        "fireworks": FireworksProvider,
         "lmstudio": LMStudioProvider,
         "llamacpp": LlamaCppProvider,
         "ollama": OllamaProvider,
@@ -246,6 +185,9 @@ def test_create_provider_instantiates_each_builtin():
         "opencode": OpenCodeProvider,
         "opencode_go": OpenCodeProvider,
         "zai": ZaiProvider,
+        "gemini": GeminiProvider,
+        "groq": GroqProvider,
+        "cerebras": CerebrasProvider,
     }
 
     with (
@@ -254,27 +196,6 @@ def test_create_provider_instantiates_each_builtin():
     ):
         for provider_id, provider_cls in cases.items():
             assert isinstance(create_provider(provider_id, settings), provider_cls)
-
-    with patch("httpx.AsyncClient"):
-        assert isinstance(
-            create_provider("bailian_coding_plan", settings), BailianCodingPlanProvider
-        )
-        assert isinstance(
-            create_provider("bailian_token_plan", settings), BailianTokenPlanProvider
-        )
-        assert isinstance(
-            create_provider("volcengine_coding_plan", settings),
-            VolcengineCodingPlanProvider,
-        )
-        assert isinstance(
-            create_provider("zhipu_coding_plan", settings), ZhipuCodingPlanProvider
-        )
-        assert isinstance(
-            create_provider("kimi_coding_plan", settings), KimiCodingPlanProvider
-        )
-        assert isinstance(
-            create_provider("minimax_token_plan", settings), MinimaxTokenPlanProvider
-        )
 
 
 def test_provider_registry_caches_by_provider_id():
