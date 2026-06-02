@@ -8,8 +8,6 @@ def append_v1_suffix(base: str) -> str:
     trimmed = base.rstrip("/")
     if trimmed.endswith("/v1"):
         return trimmed
-    if trimmed.endswith("/apps/anthropic"):
-        return f"{trimmed}/v1"
     return f"{trimmed}/v1"
 
 

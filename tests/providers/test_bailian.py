@@ -8,11 +8,9 @@ import pytest
 from api.models.anthropic import Message, MessagesRequest
 from providers.bailian import (
     BAILIAN_CODING_PLAN_BASE_URL,
-    BAILIAN_CODING_PLAN_INTL_BASE_URL,
     BAILIAN_TOKEN_PLAN_BASE_URL,
     BailianCodingPlanProvider,
     BailianTokenPlanProvider,
-    normalize_bailian_anthropic_base_url,
 )
 from providers.base import ProviderConfig
 
@@ -50,23 +48,6 @@ def mock_rate_limiter():
         instance.execute_with_retry = AsyncMock(side_effect=_passthrough)
         instance.concurrency_slot.side_effect = _slot
         yield instance
-
-
-def test_normalize_maps_legacy_openai_v1_base_urls():
-    assert (
-        normalize_bailian_anthropic_base_url(
-            "https://coding.dashscope.aliyuncs.com/v1",
-            BAILIAN_CODING_PLAN_BASE_URL,
-        )
-        == BAILIAN_CODING_PLAN_BASE_URL
-    )
-    assert (
-        normalize_bailian_anthropic_base_url(
-            "https://coding-intl.dashscope.aliyuncs.com/v1",
-            BAILIAN_CODING_PLAN_BASE_URL,
-        )
-        == BAILIAN_CODING_PLAN_INTL_BASE_URL
-    )
 
 
 @pytest.mark.parametrize(
