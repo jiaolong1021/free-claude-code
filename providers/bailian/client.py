@@ -2,15 +2,10 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-
-from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.model_listing import ProviderModelInfo
+from providers.plan import AnthropicSubscriptionPlanTransport, normalize_with_suffix_map
 
 from .models import coding_plan_model_infos, token_plan_model_infos
-
-_ANTHROPIC_VERSION = "2023-06-01"
 
 # Docs advertise ``.../apps/anthropic``; upstream expects ``.../apps/anthropic/v1/messages``.
 BAILIAN_CODING_PLAN_BASE_URL = "https://coding.dashscope.aliyuncs.com/apps/anthropic/v1"
@@ -33,16 +28,14 @@ _OPENAI_TO_ANTHROPIC_BASE: dict[str, str] = {
 
 def normalize_bailian_anthropic_base_url(configured: str, default: str) -> str:
     """Map plan Base URLs to the Anthropic Messages root (with ``/v1`` suffix)."""
-    base = (configured or default).rstrip("/")
-    mapped = _OPENAI_TO_ANTHROPIC_BASE.get(base)
-    if mapped is not None:
-        return mapped
-    if base.endswith("/apps/anthropic"):
-        return f"{base}/v1"
-    return base
+    return normalize_with_suffix_map(
+        configured,
+        default,
+        legacy_map=_OPENAI_TO_ANTHROPIC_BASE,
+    )
 
 
-class _BailianAnthropicPlanTransport(AnthropicMessagesTransport):
+class _BailianAnthropicPlanTransport(AnthropicSubscriptionPlanTransport):
     """Shared Anthropic transport for Bailian subscription plans."""
 
     def __init__(
@@ -51,9 +44,8 @@ class _BailianAnthropicPlanTransport(AnthropicMessagesTransport):
         *,
         provider_name: str,
         default_base_url: str,
-        catalog: Callable[[], frozenset[ProviderModelInfo]],
+        catalog,
     ):
-        self._catalog = catalog
         normalized = normalize_bailian_anthropic_base_url(
             config.base_url or "",
             default_base_url,
@@ -63,20 +55,9 @@ class _BailianAnthropicPlanTransport(AnthropicMessagesTransport):
             effective_config,
             provider_name=provider_name,
             default_base_url=normalized,
+            catalog=catalog,
+            auth_style="x_api_key",
         )
-
-    async def list_model_infos(self) -> frozenset[ProviderModelInfo]:
-        """Plans do not expose a working OpenAI-style ``GET /models`` listing."""
-        return self._catalog()
-
-    def _request_headers(self) -> dict[str, str]:
-        # DashScope Anthropic-compatible endpoints expect ``x-api-key`` (not only Bearer).
-        return {
-            "Accept": "text/event-stream",
-            "Content-Type": "application/json",
-            "anthropic-version": _ANTHROPIC_VERSION,
-            "x-api-key": self._api_key,
-        }
 
 
 class BailianCodingPlanProvider(_BailianAnthropicPlanTransport):

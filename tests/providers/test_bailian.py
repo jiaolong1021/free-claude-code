@@ -144,6 +144,4 @@ async def test_stream_posts_to_messages_path():
 
     assert events
     assert mock_build.call_args.args[:2] == ("POST", "/messages")
-    assert (
-        mock_build.call_args.kwargs["headers"]["x-api-key"] == "sk-sp-test"
-    )
+    assert mock_build.call_args.kwargs["headers"]["x-api-key"] == "sk-sp-test"

@@ -8,15 +8,21 @@ from config.nim import NimSettings
 from config.provider_catalog import (
     BAILIAN_CODING_PLAN_DEFAULT_BASE,
     BAILIAN_TOKEN_PLAN_DEFAULT_BASE,
+    KIMI_CODING_PLAN_DEFAULT_BASE,
+    MINIMAX_TOKEN_PLAN_DEFAULT_BASE,
     PROVIDER_CATALOG,
+    VOLCENGINE_CODING_PLAN_DEFAULT_BASE,
     ZAI_DEFAULT_BASE,
+    ZHIPU_CODING_PLAN_DEFAULT_BASE,
 )
 from config.provider_ids import SUPPORTED_PROVIDER_IDS
 from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
 from providers.deepseek import DeepSeekProvider
 from providers.exceptions import UnknownProviderTypeError
+from providers.kimi import KimiCodingPlanProvider
 from providers.llamacpp import LlamaCppProvider
 from providers.lmstudio import LMStudioProvider
+from providers.minimax import MinimaxTokenPlanProvider
 from providers.nvidia_nim import NvidiaNimProvider
 from providers.ollama import OllamaProvider
 from providers.open_router import OpenRouterProvider
@@ -27,8 +33,10 @@ from providers.registry import (
     build_provider_config,
     create_provider,
 )
+from providers.volcengine import VolcengineCodingPlanProvider
 from providers.wafer import WaferProvider
 from providers.zai import ZaiProvider
+from providers.zhipu import ZhipuCodingPlanProvider
 
 
 def _make_settings(**overrides):
@@ -43,6 +51,10 @@ def _make_settings(**overrides):
     mock.zai_api_key = "test_zai_key"
     mock.bailian_coding_plan_api_key = "test_bailian_coding_key"
     mock.bailian_token_plan_api_key = "test_bailian_token_key"
+    mock.volcengine_coding_plan_api_key = "test_volcengine_key"
+    mock.zhipu_coding_plan_api_key = "test_zhipu_key"
+    mock.kimi_coding_plan_api_key = "test_kimi_code_key"
+    mock.minimax_token_plan_api_key = "test_minimax_key"
     mock.lm_studio_base_url = "http://localhost:1234/v1"
     mock.llamacpp_base_url = "http://localhost:8080/v1"
     mock.ollama_base_url = "http://localhost:11434"
@@ -57,6 +69,10 @@ def _make_settings(**overrides):
     mock.zai_proxy = ""
     mock.bailian_coding_plan_proxy = ""
     mock.bailian_token_plan_proxy = ""
+    mock.volcengine_coding_plan_proxy = ""
+    mock.zhipu_coding_plan_proxy = ""
+    mock.kimi_coding_plan_proxy = ""
+    mock.minimax_token_plan_proxy = ""
     mock.provider_rate_limit = 40
     mock.provider_rate_window = 60
     mock.provider_max_concurrency = 5
@@ -143,6 +159,37 @@ def test_bailian_plan_descriptors_use_native_anthropic_transport():
         assert "native_anthropic" in descriptor.capabilities
 
 
+def test_cn_plan_descriptors_default_base_urls():
+    assert (
+        PROVIDER_DESCRIPTORS["volcengine_coding_plan"].default_base_url
+        == VOLCENGINE_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["zhipu_coding_plan"].default_base_url
+        == ZHIPU_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["kimi_coding_plan"].default_base_url
+        == KIMI_CODING_PLAN_DEFAULT_BASE
+    )
+    assert (
+        PROVIDER_DESCRIPTORS["minimax_token_plan"].default_base_url
+        == MINIMAX_TOKEN_PLAN_DEFAULT_BASE
+    )
+
+
+def test_cn_plan_descriptors_use_native_anthropic_transport():
+    for provider_id in (
+        "volcengine_coding_plan",
+        "zhipu_coding_plan",
+        "kimi_coding_plan",
+        "minimax_token_plan",
+    ):
+        descriptor = PROVIDER_DESCRIPTORS[provider_id]
+        assert descriptor.transport_type == "anthropic_messages"
+        assert "native_anthropic" in descriptor.capabilities
+
+
 def test_zai_provider_config_ignores_stale_base_url_setting():
     descriptor = PROVIDER_DESCRIPTORS["zai"]
 
@@ -214,6 +261,19 @@ def test_create_provider_instantiates_each_builtin():
         )
         assert isinstance(
             create_provider("bailian_token_plan", settings), BailianTokenPlanProvider
+        )
+        assert isinstance(
+            create_provider("volcengine_coding_plan", settings),
+            VolcengineCodingPlanProvider,
+        )
+        assert isinstance(
+            create_provider("zhipu_coding_plan", settings), ZhipuCodingPlanProvider
+        )
+        assert isinstance(
+            create_provider("kimi_coding_plan", settings), KimiCodingPlanProvider
+        )
+        assert isinstance(
+            create_provider("minimax_token_plan", settings), MinimaxTokenPlanProvider
         )
 
 

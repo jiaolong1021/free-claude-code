@@ -33,6 +33,10 @@ BAILIAN_CODING_PLAN_DEFAULT_BASE = (
 BAILIAN_TOKEN_PLAN_DEFAULT_BASE = (
     "https://token-plan.cn-beijing.maas.aliyuncs.com/apps/anthropic/v1"
 )
+VOLCENGINE_CODING_PLAN_DEFAULT_BASE = "https://ark.cn-beijing.volces.com/api/coding/v1"
+ZHIPU_CODING_PLAN_DEFAULT_BASE = "https://open.bigmodel.cn/api/anthropic/v1"
+KIMI_CODING_PLAN_DEFAULT_BASE = "https://api.kimi.com/coding/v1"
+MINIMAX_TOKEN_PLAN_DEFAULT_BASE = "https://api.minimax.io/anthropic/v1"
 
 
 @dataclass(frozen=True, slots=True)
@@ -200,6 +204,78 @@ PROVIDER_CATALOG: dict[str, ProviderDescriptor] = {
         default_base_url=BAILIAN_TOKEN_PLAN_DEFAULT_BASE,
         base_url_attr="bailian_token_plan_base_url",
         proxy_attr="bailian_token_plan_proxy",
+        capabilities=(
+            "chat",
+            "streaming",
+            "tools",
+            "thinking",
+            "native_anthropic",
+            "rate_limit",
+        ),
+    ),
+    "volcengine_coding_plan": ProviderDescriptor(
+        provider_id="volcengine_coding_plan",
+        transport_type="anthropic_messages",
+        credential_env="VOLCENGINE_CODING_PLAN_API_KEY",
+        credential_url="https://console.volcengine.com/ark/region:ark+cn-beijing/apikey",
+        credential_attr="volcengine_coding_plan_api_key",
+        default_base_url=VOLCENGINE_CODING_PLAN_DEFAULT_BASE,
+        base_url_attr="volcengine_coding_plan_base_url",
+        proxy_attr="volcengine_coding_plan_proxy",
+        capabilities=(
+            "chat",
+            "streaming",
+            "tools",
+            "thinking",
+            "native_anthropic",
+            "rate_limit",
+        ),
+    ),
+    "zhipu_coding_plan": ProviderDescriptor(
+        provider_id="zhipu_coding_plan",
+        transport_type="anthropic_messages",
+        credential_env="ZHIPU_CODING_PLAN_API_KEY",
+        credential_url="https://open.bigmodel.cn/usercenter/apikeys",
+        credential_attr="zhipu_coding_plan_api_key",
+        default_base_url=ZHIPU_CODING_PLAN_DEFAULT_BASE,
+        base_url_attr="zhipu_coding_plan_base_url",
+        proxy_attr="zhipu_coding_plan_proxy",
+        capabilities=(
+            "chat",
+            "streaming",
+            "tools",
+            "thinking",
+            "native_anthropic",
+            "rate_limit",
+        ),
+    ),
+    "kimi_coding_plan": ProviderDescriptor(
+        provider_id="kimi_coding_plan",
+        transport_type="anthropic_messages",
+        credential_env="KIMI_CODING_PLAN_API_KEY",
+        credential_url="https://www.kimi.com/code",
+        credential_attr="kimi_coding_plan_api_key",
+        default_base_url=KIMI_CODING_PLAN_DEFAULT_BASE,
+        base_url_attr="kimi_coding_plan_base_url",
+        proxy_attr="kimi_coding_plan_proxy",
+        capabilities=(
+            "chat",
+            "streaming",
+            "tools",
+            "thinking",
+            "native_anthropic",
+            "rate_limit",
+        ),
+    ),
+    "minimax_token_plan": ProviderDescriptor(
+        provider_id="minimax_token_plan",
+        transport_type="anthropic_messages",
+        credential_env="MINIMAX_TOKEN_PLAN_API_KEY",
+        credential_url="https://platform.minimax.io/user-center/basic-information",
+        credential_attr="minimax_token_plan_api_key",
+        default_base_url=MINIMAX_TOKEN_PLAN_DEFAULT_BASE,
+        base_url_attr="minimax_token_plan_base_url",
+        proxy_attr="minimax_token_plan_proxy",
         capabilities=(
             "chat",
             "streaming",

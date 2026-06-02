@@ -145,6 +145,36 @@ class Settings(BaseSettings):
         validation_alias="BAILIAN_TOKEN_PLAN_BASE_URL",
     )
 
+    # ==================== Volcengine / Zhipu / Kimi / MiniMax Plans ====================
+    volcengine_coding_plan_api_key: str = Field(
+        default="", validation_alias="VOLCENGINE_CODING_PLAN_API_KEY"
+    )
+    volcengine_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="VOLCENGINE_CODING_PLAN_BASE_URL",
+    )
+    zhipu_coding_plan_api_key: str = Field(
+        default="", validation_alias="ZHIPU_CODING_PLAN_API_KEY"
+    )
+    zhipu_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="ZHIPU_CODING_PLAN_BASE_URL",
+    )
+    kimi_coding_plan_api_key: str = Field(
+        default="", validation_alias="KIMI_CODING_PLAN_API_KEY"
+    )
+    kimi_coding_plan_base_url: str = Field(
+        default="",
+        validation_alias="KIMI_CODING_PLAN_BASE_URL",
+    )
+    minimax_token_plan_api_key: str = Field(
+        default="", validation_alias="MINIMAX_TOKEN_PLAN_API_KEY"
+    )
+    minimax_token_plan_base_url: str = Field(
+        default="",
+        validation_alias="MINIMAX_TOKEN_PLAN_BASE_URL",
+    )
+
     # ==================== Messaging Platform Selection ====================
     # Valid: "telegram" | "discord" | "none"
     messaging_platform: str = Field(
@@ -205,6 +235,18 @@ class Settings(BaseSettings):
     )
     bailian_token_plan_proxy: str = Field(
         default="", validation_alias="BAILIAN_TOKEN_PLAN_PROXY"
+    )
+    volcengine_coding_plan_proxy: str = Field(
+        default="", validation_alias="VOLCENGINE_CODING_PLAN_PROXY"
+    )
+    zhipu_coding_plan_proxy: str = Field(
+        default="", validation_alias="ZHIPU_CODING_PLAN_PROXY"
+    )
+    kimi_coding_plan_proxy: str = Field(
+        default="", validation_alias="KIMI_CODING_PLAN_PROXY"
+    )
+    minimax_token_plan_proxy: str = Field(
+        default="", validation_alias="MINIMAX_TOKEN_PLAN_PROXY"
     )
 
     # ==================== Provider Rate Limiting ====================
