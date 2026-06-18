@@ -28,6 +28,7 @@ _EXPECTED_PROVIDER_ORDER: tuple[str, ...] = (
     "zhipu_coding_plan",
     "kimi_coding_plan",
     "minimax_token_plan",
+    "custom_anthropic",
 )
 
 

@@ -1,50 +1,41 @@
-"""Shared Anthropic Messages transport for subscription coding/token plans."""
+"""User-defined Anthropic-compatible endpoint (custom base URL and API key)."""
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from typing import Literal
 
 from providers.anthropic_messages import AnthropicMessagesTransport
 from providers.base import ProviderConfig
-from providers.model_listing import ProviderModelInfo
-
-from .normalize import normalize_with_suffix_map
+from providers.model_listing import ProviderModelInfo, model_infos_from_ids
 
 _ANTHROPIC_VERSION = "2023-06-01"
-PlanAuthStyle = Literal["x_api_key", "bearer"]
+CustomAnthropicAuthStyle = Literal["x_api_key", "bearer"]
 
 
-class AnthropicSubscriptionPlanTransport(AnthropicMessagesTransport):
-    """Anthropic transport for vendors that expose plan-only Messages endpoints."""
+class CustomAnthropicProvider(AnthropicMessagesTransport):
+    """Anthropic Messages transport for a user-supplied upstream root URL."""
 
     def __init__(
         self,
         config: ProviderConfig,
         *,
-        provider_name: str,
-        default_base_url: str,
-        catalog: Callable[[], frozenset[ProviderModelInfo]],
-        legacy_base_map: dict[str, str] | None = None,
-        auth_style: PlanAuthStyle = "x_api_key",
+        model_ids: frozenset[str],
+        auth_style: CustomAnthropicAuthStyle = "x_api_key",
     ):
-        self._catalog = catalog
+        self._catalog_model_ids = model_ids
         self._auth_style = auth_style
-        normalized = normalize_with_suffix_map(
-            config.base_url or "",
-            default_base_url,
-            legacy_map=legacy_base_map or {},
-        )
+        normalized = (config.base_url or "").rstrip("/")
         effective_config = config.model_copy(update={"base_url": normalized})
         super().__init__(
             effective_config,
-            provider_name=provider_name,
+            provider_name="CUSTOM_ANTHROPIC",
             default_base_url=normalized,
         )
 
     async def list_model_infos(self) -> frozenset[ProviderModelInfo]:
-        """Plans often lack a working OpenAI-style ``GET /models`` listing."""
-        return self._catalog()
+        if self._catalog_model_ids:
+            return model_infos_from_ids(self._catalog_model_ids)
+        return await super().list_model_infos()
 
     def _request_headers(self) -> dict[str, str]:
         headers = {

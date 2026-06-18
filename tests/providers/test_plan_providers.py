@@ -46,13 +46,6 @@ def mock_rate_limiter():
             ("x-api-key", "volc-test"),
         ),
         (
-            VolcengineCodingPlanProvider,
-            "https://custom.ark.example.com/api/coding/v1",
-            "volc-custom",
-            "ark-code-latest",
-            ("x-api-key", "volc-custom"),
-        ),
-        (
             ZhipuCodingPlanProvider,
             ZHIPU_CODING_PLAN_BASE_URL,
             "zhipu-test",

@@ -364,6 +364,22 @@ PROVIDER_CATALOG: dict[str, ProviderDescriptor] = {
             "rate_limit",
         ),
     ),
+    "custom_anthropic": ProviderDescriptor(
+        provider_id="custom_anthropic",
+        transport_type="anthropic_messages",
+        credential_env="CUSTOM_ANTHROPIC_API_KEY",
+        credential_attr="custom_anthropic_api_key",
+        base_url_attr="custom_anthropic_base_url",
+        proxy_attr="custom_anthropic_proxy",
+        capabilities=(
+            "chat",
+            "streaming",
+            "tools",
+            "thinking",
+            "native_anthropic",
+            "rate_limit",
+        ),
+    ),
 }
 
 # Key order:

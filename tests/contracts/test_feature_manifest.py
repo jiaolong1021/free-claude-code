@@ -8,6 +8,7 @@ from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvide
 from providers.base import BaseProvider
 from providers.cerebras import CerebrasProvider
 from providers.codestral import CodestralProvider
+from providers.custom_anthropic import CustomAnthropicProvider
 from providers.deepseek import DeepSeekProvider
 from providers.fireworks import FireworksProvider
 from providers.gemini import GeminiProvider
@@ -104,6 +105,7 @@ def test_provider_and_platform_registries_include_advertised_builtins() -> None:
         "zhipu_coding_plan": ZhipuCodingPlanProvider,
         "kimi_coding_plan": KimiCodingPlanProvider,
         "minimax_token_plan": MinimaxTokenPlanProvider,
+        "custom_anthropic": CustomAnthropicProvider,
     }
     for provider_class in provider_classes.values():
         assert issubclass(provider_class, BaseProvider)

@@ -188,6 +188,19 @@ class Settings(BaseSettings):
         validation_alias="MINIMAX_TOKEN_PLAN_BASE_URL",
     )
 
+    # ==================== Custom Anthropic Endpoint ====================
+    custom_anthropic_api_key: str = Field(
+        default="", validation_alias="CUSTOM_ANTHROPIC_API_KEY"
+    )
+    custom_anthropic_base_url: str = Field(
+        default="",
+        validation_alias="CUSTOM_ANTHROPIC_BASE_URL",
+    )
+    custom_anthropic_auth_style: str = Field(
+        default="x_api_key",
+        validation_alias="CUSTOM_ANTHROPIC_AUTH_STYLE",
+    )
+
     # ==================== Messaging Platform Selection ====================
     # Valid: "telegram" | "discord" | "none"
     messaging_platform: str = Field(
@@ -265,6 +278,9 @@ class Settings(BaseSettings):
     )
     minimax_token_plan_proxy: str = Field(
         default="", validation_alias="MINIMAX_TOKEN_PLAN_PROXY"
+    )
+    custom_anthropic_proxy: str = Field(
+        default="", validation_alias="CUSTOM_ANTHROPIC_PROXY"
     )
 
     # ==================== Provider Rate Limiting ====================

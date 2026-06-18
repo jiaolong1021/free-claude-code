@@ -6,6 +6,7 @@ import asyncio
 from collections import defaultdict
 from collections.abc import Callable, Iterable, MutableMapping
 from contextlib import suppress
+from typing import Literal
 
 import httpx
 from loguru import logger
@@ -184,6 +185,37 @@ def _create_minimax_token_plan(
     return MinimaxTokenPlanProvider(config)
 
 
+def _resolve_custom_anthropic_auth_style(
+    settings: Settings,
+) -> Literal["x_api_key", "bearer"]:
+    style = settings.custom_anthropic_auth_style.strip().lower()
+    if style == "bearer":
+        return "bearer"
+    return "x_api_key"
+
+
+def _create_custom_anthropic(
+    config: ProviderConfig, settings: Settings
+) -> BaseProvider:
+    from providers.custom_anthropic import CustomAnthropicProvider
+
+    if not (config.base_url or "").strip():
+        raise AuthenticationError(
+            "CUSTOM_ANTHROPIC_BASE_URL is required. "
+            "Set it to your Anthropic-compatible endpoint root."
+        )
+    model_ids = frozenset(
+        ref.model_id
+        for ref in settings.configured_chat_model_refs()
+        if ref.provider_id == "custom_anthropic"
+    )
+    return CustomAnthropicProvider(
+        config,
+        model_ids=model_ids,
+        auth_style=_resolve_custom_anthropic_auth_style(settings),
+    )
+
+
 PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "nvidia_nim": _create_nvidia_nim,
     "open_router": _create_open_router,
@@ -208,6 +240,7 @@ PROVIDER_FACTORIES: dict[str, ProviderFactory] = {
     "zhipu_coding_plan": _create_zhipu_coding_plan,
     "kimi_coding_plan": _create_kimi_coding_plan,
     "minimax_token_plan": _create_minimax_token_plan,
+    "custom_anthropic": _create_custom_anthropic,
 }
 
 if set(PROVIDER_DESCRIPTORS) != set(SUPPORTED_PROVIDER_IDS) or set(

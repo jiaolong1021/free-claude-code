@@ -48,16 +48,6 @@ def test_normalize_with_suffix_map_applies_legacy_mapping():
     assert mapped == "https://mapped.example/v1"
 
 
-def test_normalize_with_suffix_map_applies_suffix_rewrite():
-    mapped = normalize_with_suffix_map(
-        "https://custom.ark.example.com/api/coding/v3",
-        "https://default.example/v1",
-        legacy_map={},
-        suffix_rewrites=((("/api/coding/v3", "/api/coding/v1"),)),
-    )
-    assert mapped == "https://custom.ark.example.com/api/coding/v1"
-
-
 @pytest.mark.parametrize(
     ("normalize", "configured", "default", "expected"),
     [
@@ -78,24 +68,6 @@ def test_normalize_with_suffix_map_applies_suffix_rewrite():
             "https://ark.cn-beijing.volces.com/api/coding",
             VOLCENGINE_CODING_PLAN_BASE_URL,
             VOLCENGINE_CODING_PLAN_BASE_URL,
-        ),
-        (
-            normalize_volcengine_coding_plan_base_url,
-            "https://custom.ark.example.com/api/coding/v3",
-            VOLCENGINE_CODING_PLAN_BASE_URL,
-            "https://custom.ark.example.com/api/coding/v1",
-        ),
-        (
-            normalize_volcengine_coding_plan_base_url,
-            "https://custom.ark.example.com/api/coding",
-            VOLCENGINE_CODING_PLAN_BASE_URL,
-            "https://custom.ark.example.com/api/coding/v1",
-        ),
-        (
-            normalize_volcengine_coding_plan_base_url,
-            "https://custom.ark.example.com/api/coding/v1",
-            VOLCENGINE_CODING_PLAN_BASE_URL,
-            "https://custom.ark.example.com/api/coding/v1",
         ),
         (
             normalize_zhipu_coding_plan_base_url,

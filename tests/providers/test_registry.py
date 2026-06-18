@@ -17,9 +17,9 @@ from config.provider_catalog import (
 )
 from config.provider_ids import SUPPORTED_PROVIDER_IDS
 from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
-from providers.base import ProviderConfig
 from providers.cerebras import CerebrasProvider
 from providers.codestral import CodestralProvider
+from providers.custom_anthropic import CustomAnthropicProvider
 from providers.deepseek import DeepSeekProvider
 from providers.exceptions import UnknownProviderTypeError
 from providers.fireworks import FireworksProvider
@@ -93,6 +93,10 @@ def _make_settings(**overrides):
     mock.zhipu_coding_plan_proxy = ""
     mock.kimi_coding_plan_proxy = ""
     mock.minimax_token_plan_proxy = ""
+    mock.custom_anthropic_api_key = "test_custom_key"
+    mock.custom_anthropic_base_url = "https://proxy.example.com/api/coding/v1"
+    mock.custom_anthropic_auth_style = "x_api_key"
+    mock.custom_anthropic_proxy = ""
     mock.provider_rate_limit = 40
     mock.provider_rate_window = 60
     mock.provider_max_concurrency = 5
@@ -101,6 +105,7 @@ def _make_settings(**overrides):
     mock.http_connect_timeout = 10.0
     mock.enable_model_thinking = True
     mock.nim = NimSettings()
+    mock.configured_chat_model_refs = lambda: ()
     for key, value in overrides.items():
         setattr(mock, key, value)
     return mock
@@ -164,27 +169,6 @@ def test_bailian_plan_descriptors_default_base_urls():
     assert token.default_base_url == BAILIAN_TOKEN_PLAN_DEFAULT_BASE
 
 
-def test_volcengine_provider_config_preserves_custom_base_url():
-    custom = "https://custom.ark.example.com/api/coding/v1"
-    config = build_provider_config(
-        PROVIDER_DESCRIPTORS["volcengine_coding_plan"],
-        _make_settings(volcengine_coding_plan_base_url=custom),
-    )
-
-    assert config.base_url == custom
-
-
-def test_volcengine_provider_normalizes_custom_v3_base_url():
-    provider = VolcengineCodingPlanProvider(
-        ProviderConfig(
-            api_key="test",
-            base_url="https://custom.ark.example.com/api/coding/v3",
-        )
-    )
-
-    assert provider._base_url == "https://custom.ark.example.com/api/coding/v1"
-
-
 def test_cn_plan_descriptors_default_base_urls():
     assert (
         PROVIDER_DESCRIPTORS["volcengine_coding_plan"].default_base_url
@@ -212,6 +196,7 @@ def test_plan_descriptors_use_native_anthropic_transport():
         "zhipu_coding_plan",
         "kimi_coding_plan",
         "minimax_token_plan",
+        "custom_anthropic",
     ):
         descriptor = PROVIDER_DESCRIPTORS[provider_id]
         assert descriptor.transport_type == "anthropic_messages"
@@ -304,6 +289,9 @@ def test_create_provider_instantiates_each_builtin():
         )
         assert isinstance(
             create_provider("minimax_token_plan", settings), MinimaxTokenPlanProvider
+        )
+        assert isinstance(
+            create_provider("custom_anthropic", settings), CustomAnthropicProvider
         )
 
 

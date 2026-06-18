@@ -63,6 +63,7 @@ PROVIDER_SMOKE_DEFAULT_MODELS: dict[str, str] = {
     "zhipu_coding_plan": "zhipu_coding_plan/glm-4.7",
     "kimi_coding_plan": "kimi_coding_plan/kimi-for-coding",
     "minimax_token_plan": "minimax_token_plan/MiniMax-M2.5",
+    "custom_anthropic": "custom_anthropic/my-model",
 }
 
 NVIDIA_NIM_CLI_DEFAULT_MODELS: tuple[str, ...] = (
@@ -242,7 +243,12 @@ class SmokeConfig:
         if descriptor.credential_attr is None:
             return False
         credential = getattr(self.settings, descriptor.credential_attr, "")
-        return bool(str(credential).strip())
+        if not str(credential).strip():
+            return False
+        if descriptor.base_url_attr and descriptor.default_base_url is None:
+            base_url = getattr(self.settings, descriptor.base_url_attr, "")
+            return bool(str(base_url).strip())
+        return True
 
 
 def _parse_csv(raw: str | None) -> frozenset[str]:

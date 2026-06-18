@@ -300,9 +300,8 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="volcengine_coding_plan_api_key",
         secret=True,
         description=(
-            "Volcengine Ark Coding Plan key. Use the Coding Plan Anthropic endpoint "
-            "(.../api/coding), not the pay-as-you-go API URL. Pair with "
-            "VOLCENGINE_CODING_PLAN_BASE_URL for custom domains."
+            "Volcengine Ark Coding Plan key. Use ark.cn-beijing.volces.com/api/coding, "
+            "not the pay-as-you-go API URL."
         ),
     ),
     ConfigFieldSpec(
@@ -312,10 +311,6 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="volcengine_coding_plan_base_url",
         default="https://ark.cn-beijing.volces.com/api/coding/v1",
         advanced=True,
-        description=(
-            "Anthropic Messages root. Supports custom domains; accepts "
-            ".../api/coding, .../api/coding/v1, or OpenAI-style .../api/coding/v3."
-        ),
     ),
     ConfigFieldSpec(
         "ZHIPU_CODING_PLAN_API_KEY",
@@ -376,6 +371,39 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="minimax_token_plan_base_url",
         default="https://api.minimax.io/anthropic/v1",
         advanced=True,
+    ),
+    ConfigFieldSpec(
+        "CUSTOM_ANTHROPIC_API_KEY",
+        "Custom Anthropic API Key",
+        "providers",
+        "secret",
+        settings_attr="custom_anthropic_api_key",
+        secret=True,
+        description=(
+            "API key for a user-provided Anthropic-compatible endpoint. "
+            "Use with CUSTOM_ANTHROPIC_BASE_URL and MODEL=custom_anthropic/<model>."
+        ),
+    ),
+    ConfigFieldSpec(
+        "CUSTOM_ANTHROPIC_BASE_URL",
+        "Custom Anthropic Base URL",
+        "providers",
+        settings_attr="custom_anthropic_base_url",
+        advanced=True,
+        description=(
+            "Required Anthropic Messages root for custom_anthropic, e.g. "
+            "https://your-proxy.example.com/api/coding/v1"
+        ),
+    ),
+    ConfigFieldSpec(
+        "CUSTOM_ANTHROPIC_AUTH_STYLE",
+        "Custom Anthropic Auth Style",
+        "providers",
+        settings_attr="custom_anthropic_auth_style",
+        default="x_api_key",
+        options=("x_api_key", "bearer"),
+        advanced=True,
+        description="Authorization header style for the custom Anthropic endpoint.",
     ),
     ConfigFieldSpec(
         "LM_STUDIO_BASE_URL",
@@ -584,6 +612,15 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         "providers",
         "secret",
         settings_attr="minimax_token_plan_proxy",
+        secret=True,
+        advanced=True,
+    ),
+    ConfigFieldSpec(
+        "CUSTOM_ANTHROPIC_PROXY",
+        "Custom Anthropic Proxy",
+        "providers",
+        "secret",
+        settings_attr="custom_anthropic_proxy",
         secret=True,
         advanced=True,
     ),

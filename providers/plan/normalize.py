@@ -16,14 +16,10 @@ def normalize_with_suffix_map(
     default: str,
     *,
     legacy_map: dict[str, str],
-    suffix_rewrites: tuple[tuple[str, str], ...] = (),
 ) -> str:
     """Map legacy OpenAI-style bases and append ``/v1`` when needed."""
     base = (configured or default).rstrip("/")
     mapped = legacy_map.get(base)
     if mapped is not None:
         return mapped
-    for from_suffix, to_suffix in suffix_rewrites:
-        if base.endswith(from_suffix):
-            return f"{base[: -len(from_suffix)]}{to_suffix}"
     return append_v1_suffix(base)
