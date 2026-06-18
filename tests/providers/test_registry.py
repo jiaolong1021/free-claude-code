@@ -17,6 +17,7 @@ from config.provider_catalog import (
 )
 from config.provider_ids import SUPPORTED_PROVIDER_IDS
 from providers.bailian import BailianCodingPlanProvider, BailianTokenPlanProvider
+from providers.base import ProviderConfig
 from providers.cerebras import CerebrasProvider
 from providers.codestral import CodestralProvider
 from providers.deepseek import DeepSeekProvider
@@ -161,6 +162,27 @@ def test_bailian_plan_descriptors_default_base_urls():
 
     assert coding.default_base_url == BAILIAN_CODING_PLAN_DEFAULT_BASE
     assert token.default_base_url == BAILIAN_TOKEN_PLAN_DEFAULT_BASE
+
+
+def test_volcengine_provider_config_preserves_custom_base_url():
+    custom = "https://custom.ark.example.com/api/coding/v1"
+    config = build_provider_config(
+        PROVIDER_DESCRIPTORS["volcengine_coding_plan"],
+        _make_settings(volcengine_coding_plan_base_url=custom),
+    )
+
+    assert config.base_url == custom
+
+
+def test_volcengine_provider_normalizes_custom_v3_base_url():
+    provider = VolcengineCodingPlanProvider(
+        ProviderConfig(
+            api_key="test",
+            base_url="https://custom.ark.example.com/api/coding/v3",
+        )
+    )
+
+    assert provider._base_url == "https://custom.ark.example.com/api/coding/v1"
 
 
 def test_cn_plan_descriptors_default_base_urls():

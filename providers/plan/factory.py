@@ -22,6 +22,7 @@ def base_url_normalizer(
     *,
     default: str,
     legacy_map: dict[str, str],
+    suffix_rewrites: tuple[tuple[str, str], ...] = (),
 ) -> Callable[[str, str], str]:
     """Return a ``(configured, fallback) -> normalized`` helper for tests and docs."""
 
@@ -30,6 +31,7 @@ def base_url_normalizer(
             configured,
             fallback,
             legacy_map=legacy_map,
+            suffix_rewrites=suffix_rewrites,
         )
 
     return normalize
@@ -42,6 +44,7 @@ def plan_provider(
     default_base_url: str,
     model_ids: tuple[str, ...],
     legacy_base_map: dict[str, str] | None = None,
+    suffix_rewrites: tuple[tuple[str, str], ...] = (),
     auth_style: PlanAuthStyle = "x_api_key",
     catalog: Callable[[], frozenset[ProviderModelInfo]] | None = None,
 ) -> type[PlanProvider]:
@@ -66,6 +69,7 @@ def plan_provider(
                 default_base_url=default_base_url,
                 catalog=resolved_catalog,
                 legacy_base_map=legacy_map,
+                suffix_rewrites=suffix_rewrites,
                 auth_style=auth_style,
             )
 

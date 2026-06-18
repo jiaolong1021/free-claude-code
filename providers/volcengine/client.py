@@ -10,10 +10,15 @@ VOLCENGINE_CODING_PLAN_BASE_URL = "https://ark.cn-beijing.volces.com/api/coding/
 _LEGACY_BASE_MAP: dict[str, str] = {
     "https://ark.cn-beijing.volces.com/api/coding/v3": VOLCENGINE_CODING_PLAN_BASE_URL,
 }
+# OpenAI-compatible Coding Plan roots end with ``/api/coding/v3`` on any host.
+_CODING_PLAN_SUFFIX_REWRITES: tuple[tuple[str, str], ...] = (
+    ("/api/coding/v3", "/api/coding/v1"),
+)
 
 normalize_volcengine_coding_plan_base_url = base_url_normalizer(
     default=VOLCENGINE_CODING_PLAN_BASE_URL,
     legacy_map=_LEGACY_BASE_MAP,
+    suffix_rewrites=_CODING_PLAN_SUFFIX_REWRITES,
 )
 
 VolcengineCodingPlanProvider = plan_provider(
@@ -22,4 +27,5 @@ VolcengineCodingPlanProvider = plan_provider(
     default_base_url=VOLCENGINE_CODING_PLAN_BASE_URL,
     model_ids=VOLCENGINE_CODING_PLAN_MODEL_IDS,
     legacy_base_map=_LEGACY_BASE_MAP,
+    suffix_rewrites=_CODING_PLAN_SUFFIX_REWRITES,
 )

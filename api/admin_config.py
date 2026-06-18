@@ -300,8 +300,9 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="volcengine_coding_plan_api_key",
         secret=True,
         description=(
-            "Volcengine Ark Coding Plan key. Use ark.cn-beijing.volces.com/api/coding, "
-            "not the pay-as-you-go API URL."
+            "Volcengine Ark Coding Plan key. Use the Coding Plan Anthropic endpoint "
+            "(.../api/coding), not the pay-as-you-go API URL. Pair with "
+            "VOLCENGINE_CODING_PLAN_BASE_URL for custom domains."
         ),
     ),
     ConfigFieldSpec(
@@ -311,6 +312,10 @@ FIELDS: tuple[ConfigFieldSpec, ...] = (
         settings_attr="volcengine_coding_plan_base_url",
         default="https://ark.cn-beijing.volces.com/api/coding/v1",
         advanced=True,
+        description=(
+            "Anthropic Messages root. Supports custom domains; accepts "
+            ".../api/coding, .../api/coding/v1, or OpenAI-style .../api/coding/v3."
+        ),
     ),
     ConfigFieldSpec(
         "ZHIPU_CODING_PLAN_API_KEY",

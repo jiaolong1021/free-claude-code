@@ -26,6 +26,7 @@ class AnthropicSubscriptionPlanTransport(AnthropicMessagesTransport):
         default_base_url: str,
         catalog: Callable[[], frozenset[ProviderModelInfo]],
         legacy_base_map: dict[str, str] | None = None,
+        suffix_rewrites: tuple[tuple[str, str], ...] = (),
         auth_style: PlanAuthStyle = "x_api_key",
     ):
         self._catalog = catalog
@@ -34,6 +35,7 @@ class AnthropicSubscriptionPlanTransport(AnthropicMessagesTransport):
             config.base_url or "",
             default_base_url,
             legacy_map=legacy_base_map or {},
+            suffix_rewrites=suffix_rewrites,
         )
         effective_config = config.model_copy(update={"base_url": normalized})
         super().__init__(
